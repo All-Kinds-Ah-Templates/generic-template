@@ -1,6 +1,6 @@
 # Generic Template
 
-GitHub Actions and Woodpecker CI workflows with lefthook pre-commit scripts.
+A generic template to base your language-specific templates.
 
 ## Features
   - [GitHub Actions](https://github.com/features/actions) integration
