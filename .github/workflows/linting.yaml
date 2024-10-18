@@ -42,3 +42,13 @@ jobs:
 
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@main
+
+  spellchecking:
+    name: Spell checking and corrections
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Writes changes in the local checkout
+        uses: crate-ci/typos@master
+        with:
+          write_changes: true

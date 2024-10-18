@@ -9,6 +9,7 @@ GitHub Actions, Woodpecker CI, and Lefthook pre-commit scripts.
   - just and go-task task runners
   - pipelight CI pipelines
   - goji commitizen commit message linting
+  - typos spell checking
   - git-cliff keep-a-changelog changelog generator
   - lychee dead link checker
   - minijinja templating
@@ -41,4 +42,5 @@ just build
   - treefmt
   - trivy
   - trufflehog
+  - typos
   - venom

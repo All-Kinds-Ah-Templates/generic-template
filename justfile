@@ -50,6 +50,7 @@ lint-commit-msg file:
 #  - treefmt
 #  - trivy
 #  - trufflehog
+#  - typos
 #  - venom
 install:
   lefthook install
