@@ -20,8 +20,11 @@ GitHub Actions, Woodpecker CI, and Lefthook pre-commit scripts.
   - abc and xyz todo list / kanban manager
 
 ## Install
-  - install just: `cargo install just`
-  - run `just install`
+
+```sh
+cargo install just
+just install
+```
 
 ## Build
 
