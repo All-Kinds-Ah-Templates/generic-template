@@ -5,3 +5,4 @@
 3. Software Bill of Materials (SBOM)
   - SPDX
   - CycloneDX
+  - [Dependency Tracker](https://github.com/DependencyTrack/dependency-track)
