@@ -5,7 +5,7 @@ GitHub Actions, Woodpecker CI, and Lefthook pre-commit scripts.
 ## Features
   - [GitHub Actions](https://github.com/features/actions) integration
   - [Woodpecker CI](https://woodpecker-ci.org) integration
-  - [Lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
+  - [lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
   - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
   - [pipelight](https://pipelight.dev) CI pipelines
   - [goji](https://github.com/muandane/goji) commitizen commit message linting
