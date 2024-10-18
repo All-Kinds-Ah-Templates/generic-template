@@ -8,7 +8,7 @@ GitHub Actions, Woodpecker CI, and Lefthook pre-commit scripts.
   - [lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
   - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
   - [pipelight](https://pipelight.dev) CI pipelines
-  - [goji](https://github.com/muandane/goji) commitizen commit message linting
+  - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
   - [typos](https://github.com/crate-ci/typos) spell checking
   - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator
   - [lychee](https://github.com/lycheeverse/lychee) dead link checker
