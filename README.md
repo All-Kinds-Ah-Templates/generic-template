@@ -11,7 +11,7 @@ GitHub Actions, Woodpecker CI, and Lefthook pre-commit scripts.
   - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
   - [typos](https://github.com/crate-ci/typos) spell checking
   - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator and version bumper
-  - [lychee](https://github.com/lycheeverse/lychee) dead link checker
+  - [lychee](https://github.com/lycheeverse/lychee) link checker
   - [minijinja](https://github.com/mitsuhiko/minijinja) templating
   - [treefmt](https://github.com/numtide/treefmt) code formatting
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
