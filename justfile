@@ -40,6 +40,7 @@ lint-commit-msg file:
   fi
 
 # TODO:
+#  - cocogitto
 #  - hurl
 #  - git-cliff
 #  - goji

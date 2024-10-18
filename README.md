@@ -33,6 +33,7 @@ just build
 ```
 
 ## Dependencies
+  - cocogitto
   - hurl
   - git-cliff
   - goji
