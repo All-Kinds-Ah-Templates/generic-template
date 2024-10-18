@@ -37,12 +37,12 @@ just build
   - hurl
   - git-cliff
   - goji
+  - go-task
   - just
   - lychee
   - lefthook
   - minijinja
   - pipelight
-  - task
   - treefmt
   - trivy
   - trufflehog
