@@ -1,0 +1,2 @@
+# If the path contains spaces, you need to quote it.
+rc: '"${XDG_CONFIG_HOME:-$HOME/.config}/lefthookrc"'

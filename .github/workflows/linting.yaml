@@ -1,0 +1,44 @@
+---
+name: Linting
+
+on:
+  workflow_call:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pull-requests: read
+  packages: read
+  statuses: write
+
+jobs:
+  super-linter:
+    name: Super Linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Super-linter
+        uses: github/super-linter@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  conventional_commits:
+    name: Check conventional commit compliance
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Conventional commit check
+        uses: cocogitto/cocogitto-action@main

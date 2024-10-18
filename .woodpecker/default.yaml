@@ -1,0 +1,76 @@
+when:
+  - event: push
+    branch: main
+
+clone:
+  git:
+    image: /usr/local/bin/plugin-git
+    settings:
+      lfs: false
+
+steps:
+  - name: date
+    image: sh
+    commands:
+      - date
+
+  - name: Self-check
+    image: sh
+    commands:
+      - task --list
+
+  - name: Setup
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    detach: true
+    commands:
+      - task setup
+
+  - name: Logs
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    detach: true
+    commands:
+      - task queue
+
+  - name: Testing
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    commands:
+      - task test
+
+  - name: Clean
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    commands:
+      - task teardown
+
+  - name: Build
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    commands:
+      - task build
+
+  - name: Upload packages
+    image: sh
+    environment:
+      GITEA_TOKEN:
+        from_secret: Gitea Token
+    secrets: [ "Gitea Token" ]
+    commands:
+      - task upload
