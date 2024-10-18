@@ -1,5 +1,5 @@
 build:
-  comtrya -d comtrya -v apply
+  comtrya -d setup -v apply
   pipelight trigger --flag pre-commit --attach
   pipelight logs -vv
   just test
@@ -41,6 +41,7 @@ lint-commit-msg file:
 
 # TODO:
 #  - cocogitto
+#  - comtrya
 #  - hurl
 #  - git-cliff
 #  - goji
