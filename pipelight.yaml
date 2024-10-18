@@ -15,7 +15,7 @@ pipelines:
     steps:
       - name: Run unit tests
         commands:
-          - echo go test -v ./...
+          - task --verbose test
 
   - name: docs
 
@@ -26,4 +26,4 @@ pipelines:
     steps:
       - name: Build documentation pages
         commands:
-          - echo task docs
+          - task --verbose docs
