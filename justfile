@@ -52,6 +52,7 @@ lint-commit-msg file:
 #  - treefmt
 #  - trivy
 #  - trufflehog
+#  - typst
 #  - typos
 #  - venom
 

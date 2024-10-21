@@ -1,0 +1,13 @@
+actions:
+
+  - action: package.install
+    list:
+      - fish
+      - starship
+
+  - action: command.run
+    command: echo
+    args:
+    - echo Update repositories...
+    - echo Installing dependencies...
+    - echo Configuring packages...

@@ -63,3 +63,18 @@ spontaneous
   - SPDX
   - CycloneDX
   - [Dependency Tracker](https://github.com/DependencyTrack/dependency-track)
+4. Point to whitepaper in docs
+5. Support dev / prod mode
+  - dev mode
+    - website
+      - rspress
+      - mdbook
+      - simple web server
+    - chat
+      - IRC chat server
+      - Mattermost server
+    - issue queue
+      - Gitea server
+    - testing
+      - Woodpecker CI server
+    - link to landing page and all services inside whitepaper.pdf

@@ -33,7 +33,6 @@ A generic template to base your language-specific templates.
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
   - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
-  - [typst](https://github.com/typst/typst) and [cetz](https://github.com/cetz-package/cetz) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
   - abc and xyz todo list / kanban manager
 
 ## Install
