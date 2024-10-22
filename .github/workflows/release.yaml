@@ -5,6 +5,17 @@ on: # yamllint disable-line rule:truthy
   push:
     branches:
       - v*
+  workflow_dispatch: # can't publish from dispatch
+  workflow_call:
+    inputs:
+      publish:
+        description: "Set to the release metadata JSON to publish the release"
+        required: false
+        type: string
+    secrets:
+      signingkey:
+        description: "Minisign private key. Required when publishing"
+        required: false
 
 permissions:
   contents: read
@@ -22,19 +33,30 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Install dependencies
+        run:
+          - cargo binstall -y b3sum
+          - cargo binstall -y rsign2
+
       - name: Create checksums
         run:
           - b3sum $OUTPUT > CHECKSUMS.txt
 
-      - name: Sign checksums
+      - if: inputs.publish
+        env:
+          SIGNING_KEY: ${{ secrets.signingkey }}
+          ts: $(date --utc --iso-8601=seconds)
+          git: $(git rev-parse HEAD)
+          comment: "gh=$GITHUB_REPOSITORY git=$git ts=$ts run=$GITHUB_RUN_ID"
+        name: Sign checksums
         run:
-          - rsign2 generate --passwordless
-          - rsign2 sign $CHECKSUMS.txt -t "Release $tag"
+          - rsign2 generate --force --passwordless --public-key-path minisign.pub --secret-key-path minisign.key
+          - rsign2 sign --passwordless --secret-key-file minisign.key --sig-file CHECKSUMS.txt.sig --trusted-comment "$comment" CHECKSUMS.txt
 
       - name: Verify checksums
         run:
           - echo cosign verify $IMAGE_NAME --certificate-oidc-issuer https://example.com  --certificate-identity keyless@example.com
-          - echo rsign verify CHECKSUMS.txt -p rsign.pub
+          - rsign verify --public-key-path minisign.pub CHECKSUMS.txt
 
       - name: Publish release
         run: echo publish release...
