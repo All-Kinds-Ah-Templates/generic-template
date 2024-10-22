@@ -1,0 +1,38 @@
+---
+name: Release
+
+on: # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - v*
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  tests:
+    name: Publish release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create checksums
+        run: echo creating checksums...
+
+      - name: Sign checksums
+        run: echo signing checksums... b3sum, sha3-512
+
+      - name: Verify checksums
+        run:
+          - echo cosign verify $IMAGE_NAME --certificate-oidc-issuer https://example.com  --certificate-identity keyless@example.com
+          - echo b3sum ... ; sha3-512sum ....
+          - echo rsign2 ...
+
+      - name: Publish release
+        run: echo publish release...

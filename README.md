@@ -24,6 +24,7 @@ A generic template to base your language-specific templates.
   - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
   - [comtrya](https://github.com/comtrya/comtrya) deployment runners
   - [pipelight](https://pipelight.dev) CI pipelines
+  - [blake-3](https://github.com/BLAKE3-team/BLAKE3) and [minisign](https://github.com/jedisct1/rsign2) cryptocraphic checksuming and signing of releases
   - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
   - [typos](https://github.com/crate-ci/typos) spell checking
   - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator and version bumper
