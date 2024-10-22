@@ -28,7 +28,7 @@ jobs:
 
       - name: Sign checksums
         run:
-          - rsign2 generate
+          - rsign2 generate --passwordless
           - rsign2 sign $CHECKSUMS.txt -t "Release $tag"
 
       - name: Verify checksums
