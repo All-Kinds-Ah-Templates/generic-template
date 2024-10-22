@@ -40,6 +40,7 @@ lint-commit-msg file:
   fi
 
 # TODO:
+#  - b3sum
 #  - cocogitto
 #  - comtrya
 #  - hurl
@@ -48,6 +49,7 @@ lint-commit-msg file:
 #  - lychee
 #  - minijinja
 #  - pipelight
+#  - rsign
 #  - task
 #  - treefmt
 #  - trivy

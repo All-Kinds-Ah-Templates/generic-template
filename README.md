@@ -51,6 +51,7 @@ just build
 ```
 
 ## Dependencies
+  - b3sum
   - cocogitto
   - comtrya
   - hurl
@@ -62,6 +63,7 @@ just build
   - lefthook
   - minijinja
   - pipelight
+  - rsign
   - treefmt
   - trivy
   - trufflehog
