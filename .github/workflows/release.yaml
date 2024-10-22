@@ -23,16 +23,18 @@ jobs:
           fetch-depth: 0
 
       - name: Create checksums
-        run: echo creating checksums...
+        run:
+          - b3sum $OUTPUT > CHECKSUMS.txt
 
       - name: Sign checksums
-        run: echo signing checksums... b3sum, sha3-512
+        run:
+          - rsign2 generate
+          - rsign2 sign $CHECKSUMS.txt -t "Release $tag"
 
       - name: Verify checksums
         run:
           - echo cosign verify $IMAGE_NAME --certificate-oidc-issuer https://example.com  --certificate-identity keyless@example.com
-          - echo b3sum ... ; sha3-512sum ....
-          - echo rsign2 ...
+          - echo rsign verify CHECKSUMS.txt -p rsign.pub
 
       - name: Publish release
         run: echo publish release...
