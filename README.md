@@ -24,6 +24,8 @@ A generic template to base your language-specific templates.
   - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
   - [comtrya](https://github.com/comtrya/comtrya) deployment runners
   - [pipelight](https://pipelight.dev) CI pipelines
+  - [rcl](https://rcl-lang.org) and [kcl](https://kcl-lang.io) config languages
+  - [json](https://json-schema.org), [toml](https://toml.io), and [yaml](https://yaml.org) settings file formats
   - [blake-3](https://github.com/BLAKE3-team/BLAKE3) and [minisign](https://github.com/jedisct1/rsign2) cryptocraphic checksuming and signing of releases
   - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
   - [typos](https://github.com/crate-ci/typos) spell checking
@@ -34,7 +36,7 @@ A generic template to base your language-specific templates.
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
   - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
-  - [typst](https://github.com/typst/typst) and [cetz](https://github.com/cetz-package/cetz) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
+  - [typst](https://github.com/typst/typst) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
   - abc and xyz todo list / kanban manager
 
 ## Install
@@ -54,15 +56,17 @@ just build
   - b3sum
   - cocogitto
   - comtrya
-  - hurl
   - git-cliff
   - goji
   - go-task
+  - hurl
+  - kcl
   - just
   - lychee
   - lefthook
   - minijinja
   - pipelight
+  - rcl
   - rsign
   - treefmt
   - trivy

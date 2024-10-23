@@ -39,25 +39,7 @@ lint-commit-msg file:
     return 1
   fi
 
-# TODO:
-#  - b3sum
-#  - cocogitto
-#  - comtrya
-#  - hurl
-#  - git-cliff
-#  - goji
-#  - lychee
-#  - minijinja
-#  - pipelight
-#  - rsign
-#  - task
-#  - treefmt
-#  - trivy
-#  - trufflehog
-#  - typst
-#  - typos
-#  - venom
-
+# TODO: Add remaining packages listed in README.md
 install:
   lefthook install
 
