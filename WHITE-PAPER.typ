@@ -91,14 +91,14 @@
   table.header(
     [], [*Volume*], [*Parameters*],
   ),
-  image("cylinder.svg"),
+  image("assets/cylinder.svg"),
   $ pi h (D^2 - d^2) / 4 $,
   [
     $h$: height \
     $D$: outer radius \
     $d$: inner radius
   ],
-  image("tetrahedron.svg"),
+  image("assets/tetrahedron.svg"),
   $ sqrt(2) / 12 a^3 $,
   [$a$: edge length]
 )
@@ -140,7 +140,7 @@
 
 = Figures
 #figure(
-  image("tiger.jpg"),
+  image("assets/tiger.jpg"),
   caption: [A nice figure!],
 )
 
