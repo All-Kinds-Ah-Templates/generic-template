@@ -31,6 +31,7 @@ A generic template to base your language-specific templates.
   - [typos](https://github.com/crate-ci/typos) spell checking
   - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator and version bumper
   - [lychee](https://github.com/lycheeverse/lychee) link checker
+  - [superhtml](https://github.com/kristoff-it/superhtml) html linter
   - [minijinja](https://github.com/mitsuhiko/minijinja) templating
   - [treefmt](https://github.com/numtide/treefmt) code formatting
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
@@ -68,6 +69,7 @@ just build
   - pipelight
   - rcl
   - rsign
+  - superhtml
   - treefmt
   - trivy
   - trufflehog
