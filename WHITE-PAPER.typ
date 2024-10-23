@@ -187,7 +187,7 @@ pirates long ago. @harry
 Multiple sources say ...
 @harry @electronic.
 
-#bibliography("docs/works.yml")
+#bibliography("assets/works.yml")
 
 Check the docs for more details.
 #footnote[https://typst.app/docs]
