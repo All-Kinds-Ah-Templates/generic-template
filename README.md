@@ -33,7 +33,7 @@ A generic template to base your language-specific templates.
   - [lychee](https://github.com/lycheeverse/lychee) link checker
   - [superhtml](https://github.com/kristoff-it/superhtml) html linter
   - [minijinja](https://github.com/mitsuhiko/minijinja) templating
-  - [treefmt](https://github.com/numtide/treefmt) code formatting
+  - [treefmt](https://github.com/numtide/treefmt) and [typstyle](https://github.com/Enter-tainer/typstyle) code formatting
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
   - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
@@ -74,5 +74,6 @@ just build
   - trivy
   - trufflehog
   - typst
+  - typstyle
   - typos
   - venom

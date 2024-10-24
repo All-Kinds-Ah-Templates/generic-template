@@ -14,17 +14,13 @@
   #block(smallcaps(it.body))
 ]
 
-#show heading.where(
-  level: 1
-): it => block(width: 100%)[
+#show heading.where(level: 1): it => block(width: 100%)[
   #set align(center)
   #set text(13pt, weight: "regular")
   #smallcaps(it.body)
 ]
 
-#show heading.where(
-  level: 2
-): it => text(
+#show heading.where(level: 2): it => text(
   size: 11pt,
   weight: "regular",
   style: "italic",
@@ -40,7 +36,7 @@
   paper: "us-letter",
   header: align(
     right + horizon,
-    title
+    title,
   ),
   numbering: "1",
   columns: 2,
@@ -53,9 +49,12 @@
   clearance: 2em,
 )[
 
-  #align(center, text(17pt)[
-    *#title*
-  ])
+  #align(
+    center,
+    text(17pt)[
+      *#title*
+    ],
+  )
 
   #grid(
     columns: (1fr, 1fr),
@@ -68,7 +67,7 @@
       Dr. John Doe \
       Artos Institute \
       #link("mailto:doe@artos.edu")
-    ]
+    ],
   )
 
   #par(justify: false)[
@@ -89,8 +88,11 @@
   inset: 10pt,
   align: horizon,
   table.header(
-    [], [*Volume*], [*Parameters*],
+    [],
+    [*Volume*],
+    [*Parameters*],
   ),
+
   image("assets/cylinder.svg"),
   $ pi h (D^2 - d^2) / 4 $,
   [
@@ -98,15 +100,15 @@
     $D$: outer radius \
     $d$: inner radius
   ],
-  image("assets/tetrahedron.svg"),
-  $ sqrt(2) / 12 a^3 $,
-  [$a$: edge length]
+
+  image("assets/tetrahedron.svg"), $ sqrt(2) / 12 a^3 $, [$a$: edge length],
 )
 #set table(
   stroke: none,
   gutter: 0.2em,
-  fill: (x, y) =>
-    if x == 0 or y == 0 { gray },
+  fill: (x, y) => if x == 0 or y == 0 {
+    gray
+  },
   inset: (right: 1.5em),
 )
 
@@ -132,7 +134,6 @@
 #table(
   columns: 4,
   [], [Exam 1], [Exam 2], [Exam 3],
-
   [John], [], a, [],
   [Mary], [], a, a,
   [Robert], b, a, b,
@@ -148,9 +149,11 @@
 #lorem(150)
 
 = Math
-$ sum_(k=0)^n k
-    &= 1 + ... + n \
-    &= (n(n+1)) / 2 $
+$
+  sum_(k=0)^n k
+  &= 1 + ... + n \
+  &= (n(n+1)) / 2
+$
 
 = Quotes
 #set quote(block: true)
@@ -196,16 +199,16 @@ Check the docs for more details.
 #set page(width: auto, height: auto, margin: .5cm)
 
 #let data = (
-  ([Belgium],     24),
-  ([Germany],     31),
-  ([Greece],      18),
-  ([Spain],       21),
-  ([France],      23),
-  ([Hungary],     18),
+  ([Belgium], 24),
+  ([Germany], 31),
+  ([Greece], 18),
+  ([Spain], 21),
+  ([France], 23),
+  ([Hungary], 18),
   ([Netherlands], 27),
-  ([Romania],     17),
-  ([Finland],     26),
-  ([Turkey],      13),
+  ([Romania], 17),
+  ([Finland], 26),
+  ([Turkey], 13),
 )
 
 #align(center)[
@@ -232,29 +235,37 @@ Check the docs for more details.
   ([30-34], 14.0, 15.3, 13.9, 18.7),
   ([35-44], 35.5, 26.5, 29.4, 25.8),
   ([45-54], 25.0, 20.6, 22.4, 22.0),
-  ([55+],   19.9, 18.2, 19.2, 16.4),
+  ([55+], 19.9, 18.2, 19.2, 16.4),
 )
 
 #canvas({
   draw.set-style(legend: (fill: white))
-  chart.barchart(mode: "clustered",
-                 size: (9, auto),
-                 label-key: 0,
-                 value-key: (..range(1, 5)),
-                 bar-width: .8,
-                 x-tick-step: 2.5,
-                 data,
-                 labels: ([Low], [Medium], [High], [Very high]),
-                 legend: "inner-north-east",)
+  chart.barchart(
+    mode: "clustered",
+    size: (9, auto),
+    label-key: 0,
+    value-key: (..range(1, 5),),
+    bar-width: .8,
+    x-tick-step: 2.5,
+    data,
+    labels: ([Low], [Medium], [High], [Very high]),
+    legend: "inner-north-east",
+  )
 })
 
 #let style = (stroke: black, fill: rgb(0, 0, 200, 75))
 
 #let f1(x) = calc.sin(x)
 #let fn = (
-  ($ x - x^3"/"3! $, x => x - calc.pow(x, 3)/6),
-  ($ x - x^3"/"3! - x^5"/"5! $, x => x - calc.pow(x, 3)/6 + calc.pow(x, 5)/120),
-  ($ x - x^3"/"3! - x^5"/"5! - x^7"/"7! $, x => x - calc.pow(x, 3)/6 + calc.pow(x, 5)/120 - calc.pow(x, 7)/5040),
+  ($ x - x^3"/"3! $, x => x - calc.pow(x, 3) / 6),
+  (
+    $ x - x^3"/"3! - x^5"/"5! $,
+    x => x - calc.pow(x, 3) / 6 + calc.pow(x, 5) / 120,
+  ),
+  (
+    $ x - x^3"/"3! - x^5"/"5! - x^7"/"7! $,
+    x => x - calc.pow(x, 3) / 6 + calc.pow(x, 5) / 120 - calc.pow(x, 7) / 5040,
+  ),
 )
 
 #set text(size: 10pt)
@@ -263,22 +274,32 @@ Check the docs for more details.
   import draw: *
 
   // Set-up a thin axis style
-  set-style(axes: (stroke: .5pt, tick: (stroke: .5pt)),
-            legend: (stroke: none, orientation: ttb, item: (spacing: .3), scale: 80%))
+  set-style(
+    axes: (stroke: .5pt, tick: (stroke: .5pt)),
+    legend: (stroke: none, orientation: ttb, item: (spacing: .3), scale: 80%),
+  )
 
-  plot.plot(size: (12, 8),
-    x-tick-step: calc.pi/2,
+  plot.plot(
+    size: (12, 8),
+    x-tick-step: calc.pi / 2,
     x-format: plot.formats.multiple-of,
-    y-tick-step: 2, y-min: -2.5, y-max: 2.5,
+    y-tick-step: 2,
+    y-min: -2.5,
+    y-max: 2.5,
     legend: "inner-north",
     {
       let domain = (-1.1 * calc.pi, +1.1 * calc.pi)
 
       for ((title, f)) in fn {
-        plot.add-fill-between(f, f1, domain: domain,
-          style: (stroke: none), label: title)
+        plot.add-fill-between(
+          f,
+          f1,
+          domain: domain,
+          style: (stroke: none),
+          label: title,
+        )
       }
-      plot.add(f1, domain: domain, label: $ sin x  $,
-        style: (stroke: black))
-    })
+      plot.add(f1, domain: domain, label: $ sin x $, style: (stroke: black))
+    },
+  )
 })
