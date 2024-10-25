@@ -29,6 +29,10 @@ spontaneous
     - modern compiler
       - rspack
       - WASM
+  - OpenAPI web UI
+  - metrics
+    - Prometheus: /metrics
+    - ping: /health
   - Authentication
     - API key
     - OAuth2
