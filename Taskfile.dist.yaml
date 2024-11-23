@@ -142,8 +142,8 @@ tasks:
       - './docs/technical/mdbook'
     cmds:
       - echo Building mdbook...
-      - if [ ! -d mdbook ]; then mdbook init mdbook --title "Technical Documentation" --ignore git; fi
-      - mdbook build mdbook --dest-dir build
+      - if [ ! -d mdbook ]; then mkdir -p docs/technical ; cd docs/technical ; mdbook init mdbook --title "Technical Documentation" --ignore git; fi
+      - cd docs/technical/mdbook ; mdbook build . --dest-dir build
       - 'echo Start server: mdbook serve --dest-dir build --port 3001'
 
   #run:docusourus:
@@ -168,9 +168,10 @@ tasks:
     desc: Build rspress user guides
     generates:
       - './docs/user-guides/rspress-site'
+    interactive: true
     cmds:
       - echo Building rspress-site...
-      - if [ ! -d rspress-site ]; then bun create rspress@latest ; fi
+      - if [ ! -d rspress-site ]; then bun create -y rspress@latest ; fi
       - cd rspress-site
       - cp ../rspress.config.ts .
       - bun install
@@ -183,9 +184,8 @@ tasks:
       - './docs/blog/zola'
     cmds:
       - echo Building zola...
-      - if [ ! -d zola ]; then zola init zola ; fi
-      - cd zola
-      - zola build --force --output-dir build
+      - if [ ! -d zola ]; then mkdir -p docs/blog ; cd docs/blog ; zola init zola ; fi
+      - cd zola ; zola build --force --output-dir build
       - 'echo Start server: www -p 3004 -r build'
 
   run:pagoda:
