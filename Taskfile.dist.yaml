@@ -134,7 +134,7 @@ tasks:
 
   docs:
     desc: Build documentation pages
-    deps: ['run:mdbook', 'run:rspress', run:zola', 'run:pagoda']
+    deps: ['run:mdbook', 'run:rspress', 'run:zola', 'run:pagoda']
 
   run:mdbook:
     desc: Build mdbook technical notes
