@@ -142,7 +142,7 @@ tasks:
       - './docs/technical/mdbook'
     cmds:
       - echo Building mdbook...
-      - if [ ! -d mdbook ]; then mdbook init mdbook -title "Technical Documentation" --ignore git; fi
+      - if [ ! -d mdbook ]; then mdbook init mdbook --title "Technical Documentation" --ignore git; fi
       - mdbook build mdbook --dest-dir build
       - 'echo Start server: mdbook serve --dest-dir build --port 3001'
 
