@@ -30,6 +30,7 @@ A generic template to base your language-specific templates.
   - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
   - [typos](https://github.com/crate-ci/typos) spell checking
   - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator and version bumper
+  - [git-graph](https://github.com/orhun/git-graph) git history graph visualization
   - [lychee](https://github.com/lycheeverse/lychee) link checker
   - [superhtml](https://github.com/kristoff-it/superhtml) html linter
   - [minijinja](https://github.com/mitsuhiko/minijinja) templating
@@ -59,6 +60,7 @@ just build
   - cocogitto
   - comtrya
   - git-cliff
+  - git-graph
   - goji
   - go-task
   - hurl
