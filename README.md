@@ -39,6 +39,7 @@ A generic template to base your language-specific templates.
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
   - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
   - [typst](https://github.com/typst/typst) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
+  - [d2](https://github.com/terrastruct/d2) graphs
   - abc and [basilk](https://github.com/GabAlpha/basilk) todo list / kanban manager
 
 ## Install
@@ -61,6 +62,7 @@ just build
   - cargo-deny
   - cocogitto
   - comtrya
+  - d2
   - git-cliff
   - git-graph
   - goji
