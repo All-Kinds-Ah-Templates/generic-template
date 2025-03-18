@@ -32,6 +32,10 @@ vars:
 tasks:
 
   default:
+    requires:
+      vars:
+      - name: ENV
+      - enum: [development, dev, staging, stage, production, prod]
     cmds:
       - task: hello
 
