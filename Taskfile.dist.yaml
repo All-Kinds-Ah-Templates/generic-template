@@ -96,6 +96,19 @@ tasks:
     cmds:
       - task: run:hurl
 
+  coverage:
+    desc: Generate code coverage report
+    deps: ['coverage:rust']
+
+  coverage:rust:
+    desc: Generate code coverage report
+    generates:
+      - './codecov.json'
+    sources:
+      - '**/*.rs'
+    cmds:
+      - cargo llvm-cov nextest --all-features --workspace --codecov --output-path ./codecov.json
+
   run:pipelight:tests:
     desc: Run pipelight tests
     cmds:

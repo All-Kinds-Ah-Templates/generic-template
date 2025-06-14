@@ -1,0 +1,34 @@
+---
+name: Code Coverage
+
+on: # yamllint disable-line rule:truthy
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  packages: read
+  statuses: write
+
+jobs:
+  tests:
+    name: Run tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Generate code coverage report
+        run: task coverage
+
+      - name: Upload to CodeCov
+        uses: codecov/codecov-action@v5
+        with:
+          verbose: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+          files: ${{ github.workspace }}/codecov.json
