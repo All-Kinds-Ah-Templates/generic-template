@@ -21,8 +21,8 @@ run = "just --timestamp audit"
 [pre-commit.commands.cog-check]
 run = "cog check"
 
-#[commit-msg.commands.cog-verify]
-#run = "cog verify -i '{1}'"
+# [commit-msg.commands.cog-verify]
+# run = "cog verify -i '{1}'"
 
 # Build commit message
 [prepare-commit-msg.commands.commitzen]
