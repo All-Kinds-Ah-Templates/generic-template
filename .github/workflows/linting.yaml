@@ -24,6 +24,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Super-linter
         uses: github/super-linter@latest
@@ -39,6 +40,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          submodules: recursive
 
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@main
