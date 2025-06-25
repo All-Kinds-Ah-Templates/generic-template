@@ -54,3 +54,17 @@ jobs:
         uses: crate-ci/typos@master
         with:
           write_changes: true
+
+  zizmor:
+    name: Static analysis tool for GitHub Actions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Run zizmor 🌈
+        uses: zizmorcore/zizmor-action@f52a838cfabf134edcbaa7c8b3677dde20045018 # v0.1.1
