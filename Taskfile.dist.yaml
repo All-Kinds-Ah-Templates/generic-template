@@ -54,6 +54,12 @@ tasks:
       - cmd: just help
         silent: true
 
+  plan:
+    desc: plan
+    cmds:
+      - echo Default task: build
+      - task --list | grep build
+
   build:
     desc: Build
     deps: ["build:templates"]
