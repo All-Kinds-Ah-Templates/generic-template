@@ -200,7 +200,7 @@ tasks:
     cmds:
       - echo Building docapella...
       - cd docs/technical/docapella ; mkdir -p ../../../build/output/docs/technical/docapella ; docapella build ; mv _build ../../../build/output/docs/technical/docapella
-      - "echo Start server: www --root ../../../build/output/docs/technical/docapella --port 3001"
+      - "echo Start server: www --port 3003 ../../../build/output/docs/technical/docapella"
 
   #run:docusourus:
   #desc: Build docusourus user guides
@@ -232,7 +232,7 @@ tasks:
       - cp ../rspress.config.ts .
       - bun install
       - bun run build
-      - "echo Start server: www --port 3003 build"
+      - "echo Start server: www --port 3004 build"
 
   run:zola:
     desc: Build zola blog and release notes
@@ -241,8 +241,8 @@ tasks:
     cmds:
       - echo Building zola...
       - if [ ! -d zola ]; then mkdir -p docs/blog ; cd docs/blog ; zola init zola ; fi
-      - cd docs/blog/zola ; mkdir -p ../../../build/output/docs/blog/zola ; zola build --force --base-url https://localhost:3004 --output-dir ../../../build/output/docs/blog/zola
-      - "echo Start server: www --port 3004 ../../../build/output/docs/blog/zola"
+      - cd docs/blog/zola ; mkdir -p ../../../build/output/docs/blog/zola ; zola build --force --base-url https://localhost:3005 --output-dir ../../../build/output/docs/blog/zola
+      - "echo Start server: www --port 3005 ../../../build/output/docs/blog/zola"
 
   run:pagoda:
     desc: Build pagoda site
@@ -252,7 +252,7 @@ tasks:
       - echo Building pagoda...
       - if [ ! -d pagoda ]; then pagoda init pagoda ; fi
       - cd pagoda
-      - PAGODA_HTTP_PORT=3005 pagoda serve
+      - PAGODA_HTTP_PORT=3006 pagoda serve
 
   audit:
     desc: Perform a security audit
