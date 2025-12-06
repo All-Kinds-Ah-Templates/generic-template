@@ -165,7 +165,7 @@ tasks:
 
   docs:
     desc: Build documentation pages
-    deps: ["run:mdbook", "run:rspress", "run:zola", "run:pagoda"]
+    deps: ["run:mdbook", "run:doctave", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
 
   run:mdbook:
     desc: Build mdbook technical notes
@@ -192,6 +192,15 @@ tasks:
         EOL
       - cd docs/user-guides/doctave ; doctave build --release
       - "echo Start server: doctave serve --port 3002"
+
+  run:docapella:
+    desc: Build docapella OpenAPI docs
+    generates:
+      - "./docs/technical/docapella"
+    cmds:
+      - echo Building docapella...
+      - cd docs/technical/docapella ; mkdir -p ../../../build/output/docs/technical/docapella ; docapella build ; mv _build ../../../build/output/docs/technical/docapella
+      - "echo Start server: www --root ../../../build/output/docs/technical/docapella --port 3001"
 
   #run:docusourus:
   #desc: Build docusourus user guides
