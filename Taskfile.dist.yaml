@@ -143,7 +143,7 @@ tasks:
 
   lint:
     desc: Lint code
-    deps: ["run:lychee"]
+    deps: ["run:lychee", "run:todos"]
 
   run:lychee:
     desc: Run lychee link checker
@@ -152,6 +152,11 @@ tasks:
     cmds:
       - for: sources
         cmd: if ! test "$PWD" != "${PWD%node_modules*}" ; echo lychee {{ .ITEM }} ; fi
+
+  run:todos:
+    desc: Run todo checker
+    cmds:
+      - todo-tree
 
   format:
     desc: Format code
