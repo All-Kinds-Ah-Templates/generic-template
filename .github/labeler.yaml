@@ -1,0 +1,60 @@
+workflows:
+  - '.github/**/*'
+  - '.woodpecker/**/*'
+
+assets:
+  - 'assets/**/*'
+
+bin:
+  - 'bin/**/*'
+
+build:
+  - 'build/**/*'
+
+config:
+  - 'config/**/*'
+
+contrib:
+  - 'contrib/**/*'
+
+docs:
+  - 'docs/**/*'
+
+blog:
+  - 'docs/blog/**/*'
+
+homepage:
+  - 'docs/home-page/**/*'
+
+portal:
+  - 'docs/portal/**/*'
+
+technical-docs:
+  - 'docs/technical/**/*'
+
+user-guides:
+  - 'docs/user-guides/**/*'
+
+examples:
+  - 'examples/**/*'
+
+install:
+  - 'install/**/*'
+
+plugins:
+  - 'plugins/**/*'
+
+code:
+  - 'src/**/*'
+
+tests:
+  - 'tests/**/*'
+
+vendor:
+  - 'vendor/**/*'
+
+feature:
+  - head-branch: ['^feature', 'feature', '^feat', 'feat']
+
+release:
+  - base-branch: 'main'
