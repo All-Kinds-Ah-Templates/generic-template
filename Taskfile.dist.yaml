@@ -143,7 +143,7 @@ tasks:
 
   lint:
     desc: Lint code
-    deps: ["run:lychee", "run:todos"]
+    deps: ["run:lychee", "run:todos", "run:oxlint"]
 
   run:lychee:
     desc: Run lychee link checker
@@ -157,6 +157,11 @@ tasks:
     desc: Run todo checker
     cmds:
       - todo-tree
+
+  run:oxlint:
+    desc: Run oxlint
+    cmds:
+      - oxlint
 
   format:
     desc: Format code
