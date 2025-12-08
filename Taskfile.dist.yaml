@@ -55,13 +55,13 @@ tasks:
         silent: true
 
   plan:
-    desc: plan
+    desc: "Plan"
     cmds:
-      - echo Default task: build
+      - 'echo "Default task: build"'
       - task --list | grep build
 
   build:
-    desc: Build
+    desc: "Build"
     deps: ["build:templates"]
     cmds:
       - echo Build...
@@ -83,30 +83,30 @@ tasks:
         cmd: minijinja-cli --strict --format toml --output $(basename {{ .ITEM }} .j2) {{ .ITEM }} variables.toml
 
   test:
-    desc: Run tests
+    desc: "Run tests"
     deps: ["test:code", "test:scripts", "test:apis"]
 
   test:code:
-    desc: Test code
+    desc: "Test code"
     cmds:
       - task: run:pipelight:tests
 
   test:scripts:
-    desc: Test using scripts
+    desc: "Test using scripts"
     cmds:
       - task: run:venom
 
   test:apis:
-    desc: Test APIs
+    desc: "Test APIs"
     cmds:
       - task: run:hurl
 
   coverage:
-    desc: Generate code coverage report
+    desc: "Generate code coverage report"
     deps: ["coverage:rust"]
 
   coverage:rust:
-    desc: Generate code coverage report
+    desc: "Generate code coverage report"
     generates:
       - "./codecov.json"
     sources:
@@ -115,13 +115,13 @@ tasks:
       - cargo llvm-cov nextest --all-features --workspace --codecov --output-path ./codecov.json
 
   run:pipelight:tests:
-    desc: Run pipelight tests
+    desc: "Run pipelight tests"
     cmds:
       - pipelight run tests --attach
       - pipelight logs -vv
 
   run:venom:
-    desc: Run venom scripted tests
+    desc: "Run venom scripted tests"
     cmds:
       - if [ ! -f variables.yaml ]; then echo '---' > variables.yaml ; fi
       - venom run --output-dir results --html-report --var-from-file variables.yaml **/*.yaml
@@ -130,23 +130,23 @@ tasks:
       - echo www --port 4001 results
 
   run:hurl:
-    desc: Run hurl API tests
+    desc: "Run hurl API tests"
     cmds:
       - hurl --test --parallel --glob *hurl.yaml --report-html results --report-json results
       - cat results/report.json | jq
       - echo www --port 4002 results
 
   clean:
-    desc: Clean up
+    desc: "Clean up"
     cmds:
       - echo Cleaning...
 
   lint:
-    desc: Lint code
+    desc: "Lint code"
     deps: ["run:lychee", "run:todos", "run:oxlint"]
 
   run:lychee:
-    desc: Run lychee link checker
+    desc: "Run lychee link checker"
     sources:
       - "**/*.md"
     cmds:
@@ -154,31 +154,47 @@ tasks:
         cmd: if ! test "$PWD" != "${PWD%node_modules*}" ; echo lychee {{ .ITEM }} ; fi
 
   run:todos:
-    desc: Run todo checker
+    desc: "Run todo checker"
     cmds:
       - todo-tree
 
   run:oxlint:
-    desc: Run oxlint
+    desc: "Run oxlint"
     cmds:
       - oxlint
 
   format:
-    desc: Format code
+    desc: "Format code"
     deps: ["run:treefmt"]
 
   run:treefmt:
-    desc: Run treefmt
+    desc: "Run treefmt"
     cmds:
       - treefmt
     # for v2: treefmt --on-unmatched=info
 
   docs:
-    desc: Build documentation pages
-    deps: ["run:mdbook", "run:doctave", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+    desc: "Build documentation pages"
+    deps: ["run:rustdoc", "run:mdbook", "run:doctave", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+
+  run:rustdoc:
+    desc: "Build rustdoc technical notes"
+    generates:
+      - "./docs/technical/rustdoc"
+    preconditions:
+      - test -f Cargo.toml
+    vars:
+      PKG_NAME:
+        sh: cargo get package.name
+      build_dir: ../../../build/output/docs/technical/rustdoc
+    cmds:
+      - echo Building rustdoc...
+      - cargo doc
+      - mkdir -p {{.build_dir}} ; mv target/doc/{{.PKG_NAME}}/* {{.build_dir}}/ ; rmdir target/doc/{{.PKG_NAME}} ; mv target/doc/* {{.build_dir}}/
+      - "echo Start server: www --root {{.build_dir}} --port 3000"
 
   run:mdbook:
-    desc: Build mdbook technical notes
+    desc: "Build mdbook technical notes"
     generates:
       - "./docs/technical/mdbook"
     cmds:
@@ -187,7 +203,7 @@ tasks:
       - "echo Start server: mdbook serve --dest-dir ../../../build/output/docs/technical/mdbook --port 3001"
 
   run:doctave:
-    desc: Build doctave user guides notes
+    desc: "Build doctave user guides notes"
     generates:
       - "./docs/user-guides/doctave"
     vars:
@@ -204,7 +220,7 @@ tasks:
       - "echo Start server: doctave serve --port 3002"
 
   run:docapella:
-    desc: Build docapella OpenAPI docs
+    desc: "Build docapella OpenAPI docs"
     generates:
       - "./docs/technical/docapella"
     cmds:
@@ -213,7 +229,7 @@ tasks:
       - "echo Start server: www --port 3003 ../../../build/output/docs/technical/docapella"
 
   #run:docusourus:
-  #desc: Build docusourus user guides
+  #desc: "Build docusourus user guides"
   #vars:
   #GIT_OWNER:
   #sh: git remote get-url origin | grep owner
@@ -231,7 +247,7 @@ tasks:
   #- 'echo Start server: www --port 3002 build'
 
   run:rspress:
-    desc: Build rspress user guides
+    desc: "Build rspress user guides"
     generates:
       - "./docs/user-guides/rspress-site"
     interactive: true
@@ -245,7 +261,7 @@ tasks:
       - "echo Start server: www --port 3004 build"
 
   run:zola:
-    desc: Build zola blog and release notes
+    desc: "Build zola blog and release notes"
     generates:
       - "./docs/blog/zola"
     cmds:
@@ -255,7 +271,7 @@ tasks:
       - "echo Start server: www --port 3005 ../../../build/output/docs/blog/zola"
 
   run:pagoda:
-    desc: Build pagoda site
+    desc: "Build pagoda site"
     generates:
       - "./docs/portal/pagoda"
     cmds:
@@ -265,16 +281,16 @@ tasks:
       - PAGODA_HTTP_PORT=3006 pagoda serve
 
   audit:
-    desc: Perform a security audit
+    desc: "Perform a security audit"
     deps: ["audit:secrets", "audit:vulnerabilities", "audit:code-quality"]
 
   audit:secrets:
-    desc: Scan for secrets
+    desc: "Scan for secrets"
     cmds:
       - task: run:trufflehog
 
   run:trufflehog:
-    desc: Run trufflehog
+    desc: "Run trufflehog"
     summary: |
       Scan for:
 
@@ -287,12 +303,12 @@ tasks:
       - trufflehog git file://. --since-commit HEAD --only-verified --no-update --fail
 
   audit:vulnerabilities:
-    desc: Scan for vulnerabilities
+    desc: "Scan for vulnerabilities"
     cmds:
       - task: run:trivy
 
   run:trivy:
-    desc: Run trivy
+    desc: "Run trivy"
     summary: |
       Scan for:
 
@@ -305,11 +321,11 @@ tasks:
       - trivy fs --scanners vuln,secret,misconfig --exit-code 183 .
 
   audit:code-quality:
-    desc: Look for code smells
+    desc: "Look for code smells"
     cmds:
       - task: run:sonarcube
 
   run:sonarcube:
-    desc: Run sonarcube
+    desc: "Run sonarcube"
     cmds:
       - echo sonarcube run
