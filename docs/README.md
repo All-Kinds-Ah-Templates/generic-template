@@ -5,7 +5,7 @@
   - quick install and configure instructions
 - docapella [ OpenAPI ]
   - OpenAPI explorer
-- mdbook [ code topics ]
+- mdbook [ notes ]
   - cookbooks
   - design patterns
   - interoperability

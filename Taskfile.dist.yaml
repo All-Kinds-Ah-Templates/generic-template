@@ -175,7 +175,7 @@ tasks:
 
   docs:
     desc: "Build documentation pages"
-    deps: ["run:rustdoc", "run:mdbook", "run:doctave", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+    deps: ["run:rustdoc", "run:mdbook", "run:doctave", "run:ddoc", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
 
   run:rustdoc:
     desc: "Build rustdoc technical notes"
@@ -202,6 +202,15 @@ tasks:
       - cd docs/technical/mdbook ; mkdir -p ../../../build/output/docs/technical/mdbook ; mdbook build --dest-dir ../../../build/output/docs/technical/mdbook
       - "echo Start server: mdbook serve --dest-dir ../../../build/output/docs/technical/mdbook --port 4001"
 
+  run:docapella:
+    desc: "Build docapella OpenAPI docs"
+    generates:
+      - "./docs/technical/docapella"
+    cmds:
+      - echo Building docapella...
+      - cd docs/technical/docapella ; mkdir -p ../../../build/output/docs/technical/docapella ; docapella build ; mv _build ../../../build/output/docs/technical/docapella
+      - "echo Start server: www --port 4002 ../../../build/output/docs/technical/docapella"
+
   run:doctave:
     desc: "Build doctave user guides notes"
     generates:
@@ -217,16 +226,20 @@ tasks:
         build_dir: {{.build_dir}}
         EOL
       - cd docs/user-guides/doctave ; doctave build --release
-      - "echo Start server: doctave serve --port 4002"
+      - "echo Start server: doctave serve --port 4003"
 
-  run:docapella:
-    desc: "Build docapella OpenAPI docs"
+  run:ddoc:
+    desc: "Build ddoc install instructions"
     generates:
-      - "./docs/technical/docapella"
+      - "./docs/user-guides/ddoc"
+    preconditions:
+      - test -d docs/user-guides/ddoc
+    vars:
+      build_dir: ../../../build/output/docs/user-guides/ddoc
     cmds:
-      - echo Building docapella...
-      - cd docs/technical/docapella ; mkdir -p ../../../build/output/docs/technical/docapella ; docapella build ; mv _build ../../../build/output/docs/technical/docapella
-      - "echo Start server: www --port 4003 ../../../build/output/docs/technical/docapella"
+      - echo Building ddoc...
+      - mkdir -p {{.build_dir}} ; cp -a docs/user-guides/ddoc/* {{.build_dir}}/
+      - "echo Start server: cd {{.build_dir}} ; ddoc --serve --port 4004
 
   #run:docusourus:
   #desc: "Build docusourus user guides"
@@ -244,7 +257,7 @@ tasks:
   #- 'sd --fixed-strings "facebook/docusourus" "{{.GIT_OWNER}}/{{.GIT_PROJECT}}" docusaurus.config.ts'
   #- 'sd "organizationName: .facebook." "{{.GIT_OWNER}}" docusaurus.config.ts'
   #- yarn build
-  #- 'echo Start server: www --port 4002 build'
+  #- 'echo Start server: www --port 4005 build'
 
   run:rspress:
     desc: "Build rspress user guides"
@@ -258,7 +271,7 @@ tasks:
       - cp ../rspress.config.ts .
       - bun install
       - bun run build
-      - "echo Start server: www --port 4004 build"
+      - "echo Start server: www --port 4005 build"
 
   run:zola:
     desc: "Build zola blog and release notes"
@@ -267,8 +280,8 @@ tasks:
     cmds:
       - echo Building zola...
       - if [ ! -d zola ]; then mkdir -p docs/blog ; cd docs/blog ; zola init zola ; fi
-      - cd docs/blog/zola ; mkdir -p ../../../build/output/docs/blog/zola ; zola build --force --base-url https://localhost:4005 --output-dir ../../../build/output/docs/blog/zola
-      - "echo Start server: www --port 4005 ../../../build/output/docs/blog/zola"
+      - cd docs/blog/zola ; mkdir -p ../../../build/output/docs/blog/zola ; zola build --force --base-url https://localhost:4006 --output-dir ../../../build/output/docs/blog/zola
+      - "echo Start server: www --port 4006 ../../../build/output/docs/blog/zola"
 
   run:pagoda:
     desc: "Build pagoda site"
@@ -278,7 +291,7 @@ tasks:
       - echo Building pagoda...
       - if [ ! -d pagoda ]; then pagoda init pagoda ; fi
       - cd pagoda
-      - PAGODA_HTTP_PORT=4006 pagoda serve
+      - PAGODA_HTTP_PORT=4007 pagoda serve
 
   audit:
     desc: "Perform a security audit"
