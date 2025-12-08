@@ -1,57 +1,96 @@
+  - changed-files:
+    - any-glob-to-any-file:
+
 workflows:
-  - '.github/**/*'
-  - '.woodpecker/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - '.github/**/*'
+      - '.woodpecker/**/*'
 
 assets:
-  - 'assets/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'assets/**/*'
 
 bin:
-  - 'bin/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'bin/**/*'
 
 build:
-  - 'build/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'build/**/*'
 
 config:
-  - 'config/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'config/**/*'
 
 contrib:
-  - 'contrib/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'contrib/**/*'
 
 docs:
-  - 'docs/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/**/*'
 
 blog:
-  - 'docs/blog/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/blog/**/*'
 
 homepage:
-  - 'docs/home-page/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/home-page/**/*'
 
 portal:
-  - 'docs/portal/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/portal/**/*'
 
 technical-docs:
-  - 'docs/technical/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/technical/**/*'
 
 user-guides:
-  - 'docs/user-guides/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'docs/user-guides/**/*'
 
 examples:
-  - 'examples/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'examples/**/*'
 
 install:
-  - 'install/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'install/**/*'
 
 plugins:
-  - 'plugins/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'plugins/**/*'
 
 code:
-  - 'src/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'src/**/*'
 
 tests:
-  - 'tests/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'tests/**/*'
 
 vendor:
-  - 'vendor/**/*'
+  - changed-files:
+    - any-glob-to-any-file:
+      - 'vendor/**/*'
 
 feature:
   - head-branch: ['^feature', 'feature', '^feat', 'feat']
