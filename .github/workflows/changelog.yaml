@@ -45,7 +45,7 @@ jobs:
 
       - name: Create Pull Request
         if: steps.changelog.outputs.changes == 'true'
-        uses: peter-evans/create-pull-request@v6
+        uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.WORKFLOW_TOKEN }}
           branch: changelog-update-${{ github.run_id }}
