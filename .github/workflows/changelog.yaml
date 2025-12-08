@@ -1,10 +1,9 @@
----
-name: Changelog
+name: Generate Changelog
 
 on:
-  push:
-    tags:
-      - "v*.*.*"
+  schedule:
+    - cron: "0 0 * * *" # Runs daily at midnight
+  workflow_dispatch: # Manual override
 
 jobs:
   changelog:
@@ -13,29 +12,30 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Checkout
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
           submodules: recursive
 
-      - name: Generate a changelog
-        uses: orhun/git-cliff-action@v4
-        id: git-cliff
-        with:
-          config: cliff.toml
-          args: --verbose --latest --strip header
-        env:
-          OUTPUT: CHANGES.md
-          GITHUB_REPO: ${{ github.repository }}
+      - name: Install git-cliff
+        run: |
+          latest=$(curl -s https://api.github.com/repos/orhun/git-cliff/releases/latest | jq -r .tag_name)
+          curl -L "https://github.com/orhun/git-cliff/releases/download/${latest}/git-cliff-${latest}-x86_64-unknown-linux-gnu.tar.gz" \
+          | tar -xz
+          sudo mv git-cliff /usr/local/bin/
 
-      - name: Polish changelog
-        shell: bash
-        run: sed -i '1,2d' CHANGES.md
+      - name: Generate CHANGELOG.md
+        run: |
+          git-cliff --output CHANGELOG.md
 
-      - name: Upload the changelog
-        uses: ncipollo/release-action@v1
-        with:
-          # draft: true
-          allowUpdates: true
-          bodyFile: CHANGES.md
+      - name: Commit changelog
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add CHANGELOG.md
+          git commit -m "chore: Update CHANGELOG.md" || echo "No changes to commit"
+
+      - name: Push changes
+        run: |
+          git push
