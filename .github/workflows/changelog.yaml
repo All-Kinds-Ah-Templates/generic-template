@@ -5,24 +5,22 @@ on:
     - cron: "0 0 * * *" # Runs daily at midnight
   workflow_dispatch: # Manual override
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   changelog:
-    name: Generate and publish changelog
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          submodules: recursive
 
       - name: Install git-cliff
         run: |
           latest=$(curl -s https://api.github.com/repos/orhun/git-cliff/releases/latest | jq -r .tag_name)
-          curl -L "https://github.com/orhun/git-cliff/releases/download/${latest}/git-cliff-${latest}-x86_64-unknown-linux-gnu.tar.gz" \
-          | tar -xz
+          curl -L "https://github.com/orhun/git-cliff/releases/download/${latest}/git-cliff-${latest#v}-x86_64-unknown-linux-gnu.tar.gz" \
+          | tar -xz --strip-components 1 --wildcards '*/git-cliff'
           sudo mv git-cliff /usr/local/bin/
 
       - name: Generate CHANGELOG.md
@@ -30,12 +28,28 @@ jobs:
           git-cliff --output CHANGELOG.md
 
       - name: Commit changelog
+        id: changelog
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CHANGELOG.md
-          git commit -m "chore: Update CHANGELOG.md" || echo "No changes to commit"
 
-      - name: Push changes
-        run: |
-          git push
+          git add CHANGELOG.md
+
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+            echo "changes=false" >> $GITHUB_OUTPUT
+          else
+            git commit -m "chore: Update changelog"
+            echo "changes=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Create Pull Request
+        if: steps.changelog.outputs.changes == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.WORKFLOW_TOKEN }}
+          branch: changelog-update-${{ github.run_id }}
+          title: "chore: Update changelog"
+          commit-message: "chore: Automated update of CHANGELOG.md"
+          body: "Automated changelog update"
+          base: ${{ github.ref_name }}
