@@ -1,49 +1,41 @@
+#import "@preview/prequery:0.2.0"
+#import "@preview/zebraw:0.6.1": *
+
 = Generic Template
-![Linting workflow](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/lint.yaml/badge.svg)
-![testing workflow](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/test.yaml/badge.svg)
-![packaging](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/release-packaging.yaml/badge.svg)
-![coverage](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/coverage.yaml/badge.svg)
-<!--[![codecov](https://codecov.io/gh/yonasBSD/rust-ci-github-actions-workflow/branch/main/graph/badge.svg?token=SLIHSUWHT2)](https://codecov.io/gh/yonasBSD/rust-ci-github-actions-workflow)-->
-<!--[![ghcr.io](https://img.shields.io/badge/ghcr.io-download-blue)](https://github.com/yonasBSD/rust-ci-github-actions-workflow/pkgs/container/rust-ci-github-actions-workflow)-->
-<!--[![Docker Pulls](https://img.shields.io/docker/pulls/rust-ci-github-actions-workflow/example.svg)](https://hub.docker.com/r/rust-ci-github-actions-workflow/example)-->
-<!--[![Quay.io](https://img.shields.io/badge/Quay.io-download-blue)](https://quay.io/repository/rust-ci-github-actions-workflow/example)-->
 
-![GitHub last commit](https://img.shields.io/github/last-commit/yonasBSD/rust-ci-github-actions-workflow)
-[![Dependency Status](https://deps.rs/repo/github/yonasBSD/rust-ci-github-actions-workflow/status.svg)](https://deps.rs/repo/github/yonasBSD/rust-ci-github-actions-workflow)
-[![GitHub Release](https://img.shields.io/github/release/yonasBSD/rust-ci-github-actions-workflow.svg)](https://github.com/yonasBSD/rust-ci-github-actions-workflow/releases/latest)
-[![License](https://img.shields.io/github/license/yonasBSD/rust-ci-github-actions-workflow.svg)](https://github.com/yonasBSD/rust-ci-github-actions-workflow/blob/main/LICENSE.txt)
-[![Matrix Chat](https://img.shields.io/matrix/vaultwarden:matrix.org.svg?logo=matrix)](https://matrix.to/#/#vaultwarden:matrix.org)
-
+#prequery.image("https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/lint.yaml/badge.svg", "assets/lint.svg") #prequery.image("https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/test-with-coverage.yaml/badge.svg", "assets/test-with-coverage.svg") #prequery.image("https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/cross-build.yaml/badge.svg", "assets/cross-build.svg") #prequery.image("https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/release-packaging.yaml/badge.svg", "assets/release-packaging.svg") #prequery.image("https://img.shields.io/github/last-commit/yonasBSD/rust-ci-github-actions-workflow", "assets/last-commit.svg") #prequery.image("https://deps.rs/repo/github/yonasBSD/rust-ci-github-actions-workflow/status.svg", "assets/deps-status.svg") #prequery.image("https://img.shields.io/github/release/yonasBSD/rust-ci-github-actions-workflow.svg", "assets/release.svg") #prequery.image("https://img.shields.io/github/license/yonasBSD/rust-ci-github-actions-workflow.svg", "assets/license.svg")
 
 A generic template to base your language-specific templates.
 
 == Features
-  - [GitHub Actions](https://github.com/features/actions) and [Woodpecker CI](https://woodpecker-ci.org) integration
-  - [lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
-  - [prek](https://github.com/j178/prek) pre-commit scripts
-  - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
-  - [comtrya](https://github.com/comtrya/comtrya) deployment runners
-  - [pipelight](https://pipelight.dev) CI pipelines
-  - [rcl](https://rcl-lang.org) and [kcl](https://kcl-lang.io) config languages
-  - [json](https://json-schema.org), [toml](https://toml.io), and [yaml](https://yaml.org) settings file formats
-  - [blake-3](https://github.com/BLAKE3-team/BLAKE3) and [minisign](https://github.com/jedisct1/rsign2) cryptocraphic checksuming and signing of releases
-  - [goji](https://github.com/muandane/goji) and [cocogitto](https://github.com/cocogitto/cocogitto) conventional / commitizen commit message linting
-  - [typos](https://github.com/crate-ci/typos) spell checking
-  - [git-cliff](https://github.com/orhun/git-cliff) keep-a-changelog changelog generator and version bumper
-  - [git-graph](https://github.com/orhun/git-graph) git history graph visualization
-  - [lychee](https://github.com/lycheeverse/lychee) link checker
-  - [superhtml](https://github.com/kristoff-it/superhtml) html linter
-  - [minijinja](https://github.com/mitsuhiko/minijinja) templating
-  - [treefmt](https://github.com/numtide/treefmt) and [typstyle](https://github.com/Enter-tainer/typstyle) code formatting
-  - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning
-  - [cargo-deny](https://github.com/EmbarkStudios/cargo-deny) and [cargo-auditable](https://github.com/rust-secure-code/cargo-auditable) license and SBOM management
-  - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
-  - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
-  - [typst](https://github.com/typst/typst) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
-  - [d2](https://github.com/terrastruct/d2) graphs
-  - abc and [basilk](https://github.com/GabAlpha/basilk) todo list / kanban manager
+
+- #link("https://github.com/features/actions")[GitHub Actions] and #link("https://woodpecker-ci.org")[Woodpecker CI] integration
+- #link("https://github.com/evilmartians/lefthook")[lefthook] pre-commit scripts
+- #link("https://github.com/j178/prek")[prek] pre-commit scripts
+- #link("https://just.systems")[just] and #link("https://taskfile.dev")[go-task] task runners
+- #link("https://github.com/comtrya/comtrya")[comtrya] deployment runners
+- #link("https://pipelight.dev")[pipelight] CI pipelines
+- #link("https://rcl-lang.org")[rcl] and #link("https://kcl-lang.io")[kcl] config languages
+- #link("https://json-schema.org")[json], #link("https://toml.io")[toml], and #link("https://yaml.org")[yaml] settings file formats
+- #link("https://github.com/BLAKE3-team/BLAKE3")[blake-3] and #link("https://github.com/jedisct1/rsign2")[minisign] cryptographic checksuming and signing of releases
+- #link("https://github.com/muandane/goji")[goji] and #link("https://github.com/cocogitto/cocogitto")[cocogitto] conventional / commitizen commit message linting
+- #link("https://github.com/crate-ci/typos")[typos] spell checking
+- #link("https://github.com/orhun/git-cliff")[git-cliff] keep-a-changelog changelog generator and version bumper
+- #link("https://github.com/lycheeverse/lychee")[lychee] link checker
+- #link("https://github.com/kristoff-it/superhtml")[superhtml] html linter
+- #link("https://github.com/mitsuhiko/minijinja")[minijinja] templating
+- #link("https://github.com/numtide/treefmt")[treefmt] and #link("https://github.com/Enter-tainer/typstyle")[typstyle] code formatting
+- #link("https://github.com/aquasecurity/trivy")[trivy] and #link("https://github.com/trufflesecurity/trufflehog")[trufflehog] security scanning
+- #link("https://github.com/EmbarkStudios/cargo-deny")[cargo-deny] and #link("https://github.com/rust-secure-code/cargo-auditable")[cargo-auditable] license and SBOM management
+- #link("https://github.com/ovh/venom")[venom] and #link("https://github.com/Orange-OpenSource/hurl")[hurl] test suites
+- #link("https://github.com/web-infra-dev/rspress")[rspress] and #link("https://github.com/rust-lang/mdBook")[mdbook] documentation sites
+- #link("https://github.com/typst/typst")[typst] citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
+- #link("https://github.com/terrastruct/d2")[d2] graphs
+- abc and #link("https://github.com/GabAlpha/basilk")[basilk] todo list / kanban manager
 
 == Install
+
+#show: zebraw
 
 ```sh
 cargo install just
@@ -52,37 +44,40 @@ just install
 
 == Build
 
+#show: zebraw
+
 ```sh
 just build
 ```
 
 == Dependencies
-  - basilk
-  - b3sum
-  - cargo-auditable
-  - cargo-deny
-  - cocogitto
-  - comtrya
-  - d2
-  - git-cliff
-  - git-graph
-  - goji
-  - go-task
-  - hurl
-  - kcl
-  - just
-  - lychee
-  - lefthook
-  - minijinja
-  - prek
-  - pipelight
-  - rcl
-  - rsign
-  - superhtml
-  - treefmt
-  - trivy
-  - trufflehog
-  - typst
-  - typstyle
-  - typos
-  - venom
+
+- basilk
+- b3sum
+- cargo-auditable
+- cargo-deny
+- cocogitto
+- comtrya
+- d2
+- git-cliff
+- git-graph
+- goji
+- go-task
+- hurl
+- kcl
+- just
+- lychee
+- lefthook
+- minijinja
+- prek
+- pipelight
+- rcl
+- rsign
+- superhtml
+- treefmt
+- trivy
+- trufflehog
+- typst
+- typstyle
+- typos
+- venom
