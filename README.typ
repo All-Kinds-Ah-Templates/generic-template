@@ -1,4 +1,4 @@
-# Generic Template
+= Generic Template
 ![Linting workflow](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/lint.yaml/badge.svg)
 ![testing workflow](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/test.yaml/badge.svg)
 ![packaging](https://github.com/yonasBSD/rust-ci-github-actions-workflow/actions/workflows/release-packaging.yaml/badge.svg)
@@ -17,7 +17,7 @@
 
 A generic template to base your language-specific templates.
 
-## Features
+== Features
   - [GitHub Actions](https://github.com/features/actions) and [Woodpecker CI](https://woodpecker-ci.org) integration
   - [lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
   - [prek](https://github.com/j178/prek) pre-commit scripts
@@ -43,20 +43,20 @@ A generic template to base your language-specific templates.
   - [d2](https://github.com/terrastruct/d2) graphs
   - abc and [basilk](https://github.com/GabAlpha/basilk) todo list / kanban manager
 
-## Install
+== Install
 
 ```sh
 cargo install just
 just install
 ```
 
-## Build
+== Build
 
 ```sh
 just build
 ```
 
-## Dependencies
+== Dependencies
   - basilk
   - b3sum
   - cargo-auditable
