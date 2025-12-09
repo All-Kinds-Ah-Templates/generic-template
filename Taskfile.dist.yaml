@@ -175,7 +175,20 @@ tasks:
 
   docs:
     desc: "Build documentation pages"
-    deps: ["run:rustdoc", "run:mdbook", "run:doctave", "run:ddoc", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+    deps: ["run:scdoc", "run:rustdoc", "run:mdbook", "run:doctave", "run:ddoc", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+
+  run:scdoc:
+    desc: "Build scdoc man pages"
+    generates:
+      - "./docs/technical/manpages"
+    sources:
+      - "**/*.scdoc"
+    vars:
+      build_dir: ../../../build/output/docs/technical/scdoc
+    cmds:
+      - echo Building scdoc...
+      - for: sources
+        cmd: scdoc < {{ .ITEM }} > {{ .build_dir }}/{{ .ITEM | filepath.Base | strings.TrimSuffix ".scdoc" }}.1
 
   run:rustdoc:
     desc: "Build rustdoc technical notes"
@@ -239,7 +252,7 @@ tasks:
     cmds:
       - echo Building ddoc...
       - mkdir -p {{.build_dir}} ; cp -a docs/user-guides/ddoc/* {{.build_dir}}/
-      - "echo Start server: cd {{.build_dir}} ; ddoc --serve --port 4004
+      - 'echo Start server: cd {{.build_dir}} ; ddoc --serve --port 4004'
 
   #run:docusourus:
   #desc: "Build docusourus user guides"
