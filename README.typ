@@ -20,6 +20,7 @@ A generic template to base your language-specific templates.
 ## Features
   - [GitHub Actions](https://github.com/features/actions) and [Woodpecker CI](https://woodpecker-ci.org) integration
   - [lefthook](https://github.com/evilmartians/lefthook) pre-commit scripts
+  - [prek](https://github.com/j178/prek) pre-commit scripts
   - [just](https://just.systems) and [go-task](https://taskfile.dev) task runners
   - [comtrya](https://github.com/comtrya/comtrya) deployment runners
   - [pipelight](https://pipelight.dev) CI pipelines
@@ -73,6 +74,7 @@ just build
   - lychee
   - lefthook
   - minijinja
+  - prek
   - pipelight
   - rcl
   - rsign

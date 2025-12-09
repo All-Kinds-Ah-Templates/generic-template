@@ -42,6 +42,8 @@ lint-commit-msg file:
 # TODO: Add remaining packages listed in README.md
 install:
   lefthook install
+  prek install
+  prek auto-upgrade
 
 help:
   task help
