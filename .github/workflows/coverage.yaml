@@ -7,15 +7,14 @@ on: # yamllint disable-line rule:truthy
     branches:
       - main
 
-permissions:
-  contents: read
-  packages: read
-  statuses: write
-
 jobs:
-  tests:
-    name: Run tests
+  codecov:
+    name: CodeCov
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+      statuses: write
 
     steps:
       - name: Checkout code
@@ -33,3 +32,39 @@ jobs:
           verbose: true
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ github.workspace }}/codecov.json
+
+  badge:
+    name: Coverage Badge
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@nightly
+
+      - name: Install cargo-binstall
+        uses: cargo-bins/cargo-binstall@main
+
+      - name: Install tarpaulin
+        run: cargo binstall -y cargo-tarpaulin
+
+      - name: Run coverage (json)
+        run: cargo tarpaulin --out Json --output-dir target/coverage
+
+      - name: Extract coverage percentage
+        id: coverage
+        run: |
+          COVERAGE=$(cat target/coverage/tarpaulin-report.json | jq '.coverage')
+          echo "percentage=$COVERAGE" >> $GITHUB_OUTPUT
+          echo "Coverage: $COVERAGE%"
+
+      - name: Generate coverage badge
+        uses: yonasBSD/coverage-badge@v0
+        with:
+          coverage: ${{ steps.coverage.outputs.percentage }}
+          output: assets/coverage.svg
+          commit: true
