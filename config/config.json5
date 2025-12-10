@@ -1,0 +1,13 @@
+{
+  // A more flexible format based on ECMAScript 5.1
+  title: 'JSON5 Example', // Unquoted keys and single quotes are okay
+
+  purpose: 'Human-friendly configuration files',
+  features: [
+    'Comments allowed',
+    'Unquoted keys',
+    'Single quotes for strings',
+    'Trailing commas', // Trailing commas are allowed in JSON5
+  ],
+  version: 2.0,
+}

@@ -1,0 +1,18 @@
+{
+  // The ultimate human-friendly format
+  title: Hjson Example # Comments with hash symbol work too
+
+  purpose: "Highly human-readable configuration"
+
+  features: [
+    # Commas are optional, just use newlines
+    'Comments (# // /* */)',
+    "Optional commas"
+    '''
+    Multiline strings
+    work without quotes
+    if indented correctly.
+    '''
+  ]
+  version: 3.0
+}
