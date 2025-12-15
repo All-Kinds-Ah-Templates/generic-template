@@ -1,0 +1,28 @@
+extend = { path = "Makefile.local.toml", optional = true }
+
+# Fetch from remote
+#[config]
+#load_script = "wget -O /home/myuser/common.toml companyserver.com/common.toml"
+#load_script = "git clone git@mygitserver:user/project.git /home/myuser/common"
+
+# profile based environment override
+[env.development]
+DEV = true
+
+[env.production]
+PROD = true
+
+[tasks.default]
+dependencies = ["run"]
+
+[tasks.run]
+script = '''
+  echo Run main task here...
+'''
+
+# To only load environment variables whenever a variable hasn't been defined
+# yet, use the defaults_only property.
+env_files = [
+    { path = "./load_only_undefined.env", defaults_only = true },
+    { path = "./load_all.env" }
+]

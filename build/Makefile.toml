@@ -29,6 +29,18 @@ description = "Runs hello world"
 category = "Build"
 script = "echo hello dev[$DEV] prod[$PROD]"
 
+[tasks.dev-only]
+description = "Task only for development"
+condition = { env_set = ["DEV"] }
+command = "echo"
+args = ["This runs only in development"]
+
+[tasks.prod-only]
+description = "Task only for production"
+condition = { env_set = ["PROD"] }
+command = "echo"
+args = ["This runs only in production"]
+
 [tasks.hello-world.linux]
 script = '''
 echo "Hello World From Linux"
