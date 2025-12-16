@@ -16,7 +16,7 @@ pipelines:
       - name: Run unit tests
         commands:
           # test binaries, examples, benches, and libraries
-          - cargo nextest run --workspace --all --all-targets --all-features --no-fail-fast --no-tests=pass
+          - cargo nextest run --workspace --all-targets --all-features
 
   - name: docs
 
