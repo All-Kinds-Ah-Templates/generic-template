@@ -141,7 +141,12 @@ function run-framework-run-stage
     return 1
   end
 
-  set run_scripts (find --type executable ./run/scripts/$stage/run)
+  # Search for stage scripts
+  for f in (find --type f ./run/scripts/$stage/run)
+    set cmd (run-framework-get-run-cmd $f)
+    set -a run_scripts run-framework-run-prepost $cmd
+  end
+
   if [ -n "$run_scripts" ]
     parallel -- $run_scripts
     if not [ $status -eq 0 ]
@@ -150,6 +155,7 @@ function run-framework-run-stage
     end
 
   else
+    # Default stage scripts if none are found above
     switch $stage
       # preflight
       case preflight
