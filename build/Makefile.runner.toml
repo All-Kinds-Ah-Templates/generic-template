@@ -83,6 +83,7 @@ run_task = { name = ["preflight_", "init_", "setup_", "run_", "shutdown_", "tear
 [tasks.preflight_]
 description = "Preflight Checks"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined preflight
       echo "Running preflight..."
@@ -93,6 +94,7 @@ script.main = '''
 [tasks.init_]
 description = "Initialize Environment"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined init
       echo "Running init..."
@@ -103,6 +105,7 @@ script.main = '''
 [tasks.setup_]
 description = "Setup Services and Dependencies"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined setup
       echo "Running setup..."
@@ -113,16 +116,13 @@ script.main = '''
 [tasks.run_]
 description = "Run main task"
 extend = "base-script"
-script.main = '''
-    if is_defined run
-      echo "Running run..."
-      run_task run
-    end
-'''
+script_runner = "@duckscript"
+dependencies = ["run"]
 
 [tasks.shutdown_]
 description = "Shutdown main task"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined shutdown
       echo "Running shutdown..."
@@ -133,6 +133,7 @@ script.main = '''
 [tasks.teardown_]
 description = "Teardown Services and Dependencies"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined teardown
       echo "Running teardown..."
@@ -143,6 +144,7 @@ script.main = '''
 [tasks.clean_]
 description = "Clean Up Environment"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined clean
       echo "Running clean..."
@@ -153,6 +155,7 @@ script.main = '''
 [tasks.completed_]
 description = "Task Completed"
 extend = "base-script"
+script_runner = "@duckscript"
 script.main = '''
     if is_defined completed
       echo "Running completed..."
