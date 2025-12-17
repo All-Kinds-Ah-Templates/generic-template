@@ -2,7 +2,7 @@ name: Generate Changelog
 
 on:
   schedule:
-    - cron: "0 0 * * *" # Runs daily at midnight
+    - cron: "0 0 * * 0" # Run every Sunday at midnight
   workflow_dispatch: # Manual override
 
 permissions:
