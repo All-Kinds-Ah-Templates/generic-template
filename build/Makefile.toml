@@ -146,6 +146,18 @@ script = '''
 echo hello
 '''
 
+[tasks.cli-args]
+script = '''
+#!@duckscript
+all_values = array_join ${@} ", "
+echo all args: ${all_values}
+
+echo some fielded values:
+echo 1: ${1}
+echo 2: ${2}
+echo 3: ${3}
+'''
+
 [tasks.legacy]
 deprecated = "Please use task OTHER instead"
 
