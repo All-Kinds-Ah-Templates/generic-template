@@ -42,18 +42,29 @@ DEV = true
 [env.production]
 PROD = true
 
-[tasks.hello]
-alias = "ping"
-
 [tasks.ping]
 description = "Verify script can run"
 extend = "base-script"
 script.main = "echo pong"
 
+[tasks.hello]
+alias = "ping"
+
 [tasks.ok]
 description = "Liveness Probe"
-command = "echo"
-args = ["ok"]
+script_runner = "@duckscript"
+script.pre = "echo pre ok"
+script.post = "echo post ok"
+script.main = '''
+  stages = array "preflight" "init" "setup" "run" "shutdown" "teardown" "clean" "completed"
+  for stage in ${stages}
+    if is_defined ${stage}_test
+      echo "Running ${stage} test..."
+      run_task ${stage}_test
+      echo "Completed."
+    end
+  end
+'''
 
 [tasks.health]
 description = "Readiness Probe"
