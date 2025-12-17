@@ -24,7 +24,7 @@ function run-framework-get-run-cmd
   switch (string lower $filename)
     case Makefile.toml
       set build (git rev-parse --show-toplevel)/build
-      set cmd "cp $build/Makefile.toml Makefile.runner ; cargo make --makefile $Makefile.runner.toml --verbose"
+      set cmd "cp $build/Makefile.toml Makefile.runner ; cargo make --makefile $Makefile.runner.toml --time-summary --verbose"
 
     case justfile
       set cmd "just --justfile $file --verbose"

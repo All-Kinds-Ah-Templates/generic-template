@@ -1,5 +1,8 @@
 extend = { path = "Makefile.local.toml", optional = true }
 
+[config]
+skip_core_tasks = true
+
 # Fetch from remote
 #[config]
 #load_script = "wget -O /home/myuser/common.toml companyserver.com/common.toml"
@@ -142,6 +145,13 @@ script = '''
 #!/usr/bin/env sh
 echo hello
 '''
+
+[tasks.install]
+install_script = '''
+echo Installing dependencies...
+'''
+command = "echo"
+args = ["Done"]
 
 [tasks.test-flow]
 env = { "SOME_ENV_VAR" = "value" }

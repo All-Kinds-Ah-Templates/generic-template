@@ -1,5 +1,8 @@
 extend = { path = "Makefile.toml", optional = false }
 
+[config]
+skip_core_tasks = true
+
 # Fetch from remote
 #[config]
 #load_script = "wget -O /home/myuser/common.toml companyserver.com/common.toml"
