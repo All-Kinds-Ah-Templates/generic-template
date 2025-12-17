@@ -1,12 +1,39 @@
 extend = { path = "Makefile.toml", optional = false }
+# To only load environment variables whenever a variable hasn't been defined
+# yet, use the defaults_only property.
+env_files = [
+    { path = "./load_only_undefined.env", defaults_only = true },
+    { path = "./load_all.env" }
+]
 
 [config]
 skip_core_tasks = true
-
+init_task = "startup"
+end_task = "shutdown"
+on_error_task = "catch"
 # Fetch from remote
-#[config]
 #load_script = "wget -O /home/myuser/common.toml companyserver.com/common.toml"
 #load_script = "git clone git@mygitserver:user/project.git /home/myuser/common"
+
+[tasks.startup]
+description = "Startup task (init)"
+command = "echo"
+args = ["Booting..."]
+
+[tasks.shutdown]
+description = "Shutdown task (teardown)"
+command = "echo"
+args = ["Shutting down..."]
+
+[tasks.catch]
+description = "Catch task (clean up)"
+command = "echo"
+args = ["Caught error..."]
+
+[tasks.base-script]
+script.pre = "echo start"
+script.main = "echo main"
+script.post = "echo end"
 
 # profile based environment override
 [env.development]
@@ -15,12 +42,29 @@ DEV = true
 [env.production]
 PROD = true
 
-[tasks.base-script]
-script.pre = "echo start"
-script.main = "echo main"
-script.post = "echo end"
+[tasks.hello]
+alias = "ping"
 
-[tasks.extended-script]
+[tasks.ping]
+description = "Verify script can run"
+extend = "base-script"
+script.main = "echo pong"
+
+[tasks.ok]
+description = "Liveness Probe"
+command = "echo"
+args = ["ok"]
+
+[tasks.health]
+description = "Readiness Probe"
+command = "echo"
+args = ["""
+{
+  "status": "healthy",
+  "db": "connected",
+  "cache": "connected"
+}
+"""]
 
 [tasks.default]
 run_task = { name = ["preflight_", "init_", "setup_", "run_", "shutdown_", "teardown_", "clean_", "completed_"], fork = true, cleanup_task = "cleanup", parallel = false }
@@ -28,105 +72,82 @@ run_task = { name = ["preflight_", "init_", "setup_", "run_", "shutdown_", "tear
 [tasks.preflight_]
 description = "Preflight Checks"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined preflight
       echo "Running preflight..."
       run_task preflight
     end
-    '''
-]
+'''
 
 [tasks.init_]
 description = "Initialize Environment"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined init
       echo "Running init..."
       run_task init
     end
-    '''
-]
+'''
 
 [tasks.setup_]
 description = "Setup Services and Dependencies"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined setup
       echo "Running setup..."
       run_task setup
     end
-    '''
-]
+'''
 
 [tasks.run_]
 description = "Run main task"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined run
       echo "Running run..."
       run_task run
     end
-    '''
-]
+'''
 
 [tasks.shutdown_]
 description = "Shutdown main task"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined shutdown
       echo "Running shutdown..."
       run_task shutdown
     end
-    '''
-]
+'''
 
 [tasks.teardown_]
 description = "Teardown Services and Dependencies"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined teardown
       echo "Running teardown..."
       run_task teardown
     end
-    '''
-]
+'''
 
 [tasks.clean_]
 description = "Clean Up Environment"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined clean
       echo "Running clean..."
       run_task clean
     end
-    '''
-]
+'''
 
 [tasks.completed_]
 description = "Task Completed"
 extend = "base-script"
-script.main = [
-    '''
+script.main = '''
     if is_defined completed
       echo "Running completed..."
       run_task completed
     end
-    '''
-]
+'''
 
 [tasks.cleanup]
 description = "Cleanup"
-
-# To only load environment variables whenever a variable hasn't been defined
-# yet, use the defaults_only property.
-env_files = [
-    { path = "./load_only_undefined.env", defaults_only = true },
-    { path = "./load_all.env" }
-]
