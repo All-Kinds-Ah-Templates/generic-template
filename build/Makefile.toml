@@ -146,6 +146,9 @@ script = '''
 echo hello
 '''
 
+[tasks.legacy]
+deprecated = "Please use task OTHER instead"
+
 [tasks.install]
 install_script = '''
 echo Installing dependencies...
