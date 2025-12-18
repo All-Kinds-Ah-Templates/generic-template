@@ -111,16 +111,7 @@ function run-framework-run-stage
 
   mkdir ./run/scripts/$stage/{pre,post}
 
-  # Run pre scripts
-#    for f in ./run/scripts/$stage/pre
-#      run-framework-run-prepost $f
-#
-#      if not [ $status -eq 0 ]
-#        colorme red "Pre $stage :: $f failed. Exiting."
-#        return 1
-#      end
-#    end
-
+  # Search for pre scripts
   if [ -d ./run/scripts/$stage/pre ]
     run-framework --cd ./run/scripts/$stage/pre
 
@@ -135,6 +126,7 @@ function run-framework-run-stage
     set -a pre_scripts run-framework-run-prepost $cmd
   end
 
+  # Run pre scripts
   parallel -- $pre_scripts
   if not [ $status -eq 0 ]
     colorme red "Pre $stage failed. Exiting."
@@ -210,16 +202,7 @@ function run-framework-run-stage
     end
   end
 
-  # Run post scripts
-#  for f in ./run/scripts/$stage/post
-#    run-framework-run-prepost $f
-#
-#    if not [ $status -eq 0 ]
-#      colorme red "Post $stage :: $f failed. Exiting."
-#      return 1
-#    end
-#  end
-
+  # Search for post scripts
   if [ -d ./run/scripts/$stage/post ]
     run-framework --cd ./run/scripts/$stage/post
 
@@ -234,6 +217,7 @@ function run-framework-run-stage
     set -a post_scripts run-framework-run-prepost $cmd
   end
 
+  # Run post scripts
   parallel -- $post_scripts
   if not [ $status -eq 0 ]
     colorme red "Post $stage failed. Exiting."
