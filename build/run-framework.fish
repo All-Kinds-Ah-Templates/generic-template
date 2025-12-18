@@ -29,6 +29,18 @@ function run-framework-get-run-cmd
     case justfile
       set cmd "just --justfile $file --verbose"
 
+    case local.just
+      set files (command ls *.just ^/dev/null | command grep -v '^local.just$')
+
+      if test (count $files) -gt 0
+        # Build JSON array for minijinja-cli
+        set json (printf '[%s]' (string join ',' (for f in $files; echo "\"$f\""; end)))
+        minijinja-cli (git rev-parse --show-toplevel)/build/run-framework.just.j2 -D files:=$json -o Justfile.run
+
+        # Run just
+        just -f Justfile.run
+      end
+
     case taskfile.yaml
       set cmd "task --taskfile $file --verbose"
 

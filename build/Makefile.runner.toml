@@ -112,7 +112,36 @@ script.main = '''
 description = "Run main task"
 extend = "base-script"
 script_runner = "@duckscript"
-dependencies = ["run"]
+script = '''
+    if is_defined run
+      echo "Running run..."
+      run_task run
+    else
+      run_task run_just_
+    end
+'''
+
+[tasks.run_just_]
+script_runner = "fish"
+script = '''
+  if [ -f "Justfile.run" ]
+    echo Running Justfile.run...
+    exists = (just -l | command grep run | wc -l)
+
+    if [ "$exists" -gt 0 ]
+      just run
+
+    else
+      just
+
+    end
+
+  else
+    colorme red "Error: Run task not found."
+    return 1
+
+  end
+'''
 
 [tasks.shutdown_]
 description = "Shutdown main task"
