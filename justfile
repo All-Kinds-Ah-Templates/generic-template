@@ -5,8 +5,15 @@ build:
   just test
   just clean
 
+docs:
+  task docs
+  #cargo doc --no-deps --open
+
 test:
   task test
+
+coverage:
+  task coverage
 
 lint:
   task lint
@@ -17,8 +24,11 @@ format:
 audit:
   task audit
 
-clean:
-  task clean
+[parallel]
+check: lint format test
+
+fix:
+  task fix
 
 prepare-commit-msg file:
   #!/bin/sh
@@ -39,11 +49,38 @@ lint-commit-msg file:
     return 1
   fi
 
-# TODO: Add remaining packages listed in README.md
 install:
   lefthook install
   prek install
   prek auto-upgrade
 
+setup:
+  echo "Begin setup..."
+
+env:
+  echo "Setup environment variables..."
+
+clean:
+  task clean
+
 help:
   task help
+
+bump:
+  echo "Bump release..."
+
+release:
+  echo "Publish release..."
+
+deploy:
+  echo "Deploy online..."
+
+dev:
+  echo "Starting in dev mode..."
+
+watch:
+  echo "Watching changes..."
+  cargo watch -x test
+
+bench:
+  echo "Launch benchmarks..."

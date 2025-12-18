@@ -308,7 +308,7 @@ tasks:
 
   audit:
     desc: "Perform a security audit"
-    deps: ["audit:secrets", "audit:vulnerabilities", "audit:code-quality"]
+    deps: ["audit:secrets", "audit:vulnerabilities", "audit:code-quality", "audit:deps", "audit:license", "audit:bloat"]
 
   audit:secrets:
     desc: "Scan for secrets"
@@ -355,3 +355,65 @@ tasks:
     desc: "Run sonarcube"
     cmds:
       - echo sonarcube run
+
+  audit:deps:
+    desc: "Detect unused dependencies"
+    deps:
+      - task: run:cargo-audit
+      - task: run:cargo-machete
+      - task: run:cargo-udeps
+
+  run:cargo-audit:
+    desc: "Run cargo-audit"
+    cmds:
+      - echo cargo audit
+
+  run:cargo-machete:
+    desc: "Run cargo-machete"
+    cmds:
+      - echo cargo machete
+
+  run:cargo-udeps:
+    desc: "Run cargo-udeps"
+    cmds:
+      - echo cargo udeps
+
+  audit:license:
+    desc: "Find banned licenses."
+    deps:
+      - task: run:cargo-license
+      - task: run:cargo-deny
+
+  run:cargo-license:
+    desc: "Run cargo-license"
+    cmds:
+      - echo cargo license --authors --do-not-bundle
+
+  run:cargo-deny:
+    desc: "Run cargo-deny"
+    cmds:
+      - echo cargo deny check licenses bans
+
+  audit:bloat:
+    desc: "Measure amount of bloat"
+    deps:
+      - task: run:cargo-bloat
+
+  run:cargo-bloat:
+    desc: "Run cargo-bloat"
+    cmds:
+      - echo cargo bloat --release --crunch
+
+  fix:
+    desc: "Format files"
+    deps: ["run:cargo-fmt", "run:cargo-clippy"]
+
+  run:cargo-fmt:
+    desc: "Run cargo-fmt"
+    cmds:
+      - cargo fmt --all
+
+  run:cargo-clippy:
+    desc: "Run cargo-clippy"
+    cmds:
+      - cargo clippy --fix --allow-dirty
