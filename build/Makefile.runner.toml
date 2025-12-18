@@ -83,13 +83,8 @@ run_task = { name = ["preflight_", "init_", "setup_", "run_", "shutdown_", "tear
 [tasks.preflight_]
 description = "Preflight Checks"
 extend = "base-script"
-script_runner = "@duckscript"
-script.main = '''
-    if is_defined preflight
-      echo "Running preflight..."
-      run_task preflight
-    end
-'''
+dependencies = ["preflight"]
+ignore_errors = true
 
 [tasks.init_]
 description = "Initialize Environment"
