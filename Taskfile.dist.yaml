@@ -47,12 +47,17 @@ tasks:
 
       This is space for a longer description.
     cmds:
-      - cmd: echo " Hello {{ .fullname }}!"
+      - cmd: echo "Hello {{ .fullname }}!"
         silent: true
       - cmd: echo -e "\nRun `just help` to get started."
         silent: true
       - cmd: just help
         silent: true
+
+  help:
+    desc: "Getting Started"
+    cmds:
+      - echo "Getting started..."
 
   plan:
     desc: "Plan"

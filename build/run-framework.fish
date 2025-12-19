@@ -42,6 +42,21 @@ function run-framework-get-run-cmd
     case taskfile.yaml
       set cmd "task --taskfile $file --verbose"
 
+    case taskfile.local.yaml
+      # Build JSON array for minijinja-cli
+      set files_json '[]'
+
+      for file in (command ls *.task.yaml ^/dev/null | command grep -v '^taskfile.local.yaml$')
+        if test -f $file
+          set content (cat $file | command grep -Ev '^(version|tasks):' | (jq -Rs .)
+          set name (printf '%s' $file | jq -Rs .)
+          set files_json (echo $files_json | jq ". + [{\"name\": $name, \"content\": $content}]")
+        end
+      end
+
+      minijinja-cli (git rev-parse --show-toplevel)/build/taskfile.runner.yaml.j2 -D <(echo $files_json | jq '{files: .}') -o taskfile.yaml.run
+      set cmd "taskfile --taskfile taskfile.yaml.run"
+
     case pipelight.yaml
       set path (dirname $file)
       set cmd "cd $path ; pipelight run default --attach -vv"

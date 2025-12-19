@@ -1,0 +1,116 @@
+version: "3"
+
+env:
+  #ENV: dev
+  #ENV: testing
+  #ENV: staging
+  ENV: production
+
+dotenv: [".env", "{{ .taskEnv }}"]
+
+vars:
+  project: Hello World
+  homepage: https://example.com
+  forums: https://example.com/forums
+  chat: https://chat.example.com
+  ircserver: irc.libera.chat
+  ircroom: help
+  homepage: https://example.com
+  author: Acme Inc.
+  version: 0.0.1
+  build:
+    sh: git rev-parse --short HEAD
+  date:
+    sh: date -Ins
+  license: MIT
+  user:
+    sh: id -u -n
+  hostname:
+    sh: hostname
+  taskEnv: .task.env
+  os: ["windows", "linux", "darwin"]
+  arch: ["amd64", "arm64"]
+
+tasks:
+  hello:
+    desc: "Display project welcome message"
+    summary: |
+      Display project information and welcome message
+
+      This is space for a longer description.
+    cmds:
+      - cmd: echo " Hello {{ .fullname }}!"
+        silent: true
+      - cmd: echo -e "\nRun `just help` to get started."
+        silent: true
+      - cmd: just help
+        silent: true
+
+  ping:
+    desc: "Ping"
+    cmds:
+      - echo pong
+
+  default:
+    requires:
+      vars:
+        - name: ENV
+        - enum: [development, dev, staging, stage, production, prod]
+    cmds:
+      - task: preflight_
+      - task: init_
+      - task: setup_
+      - task: run_
+      - task: shutdown_
+      - task: teardown_
+      - task: clean_
+      - defer: { task: completed_ }
+
+  ping:
+    desc: "Ping"
+    cmds:
+      - echo pong
+
+  preflight_:
+    desc: "preflight"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "preflight")] | length\')" -gt 0 ] && task preflight'
+
+  init:
+    desc: "Init"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "init")] | length\')" -gt 0 ] && task init'
+
+  setup_:
+    desc: "Setup"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "setup")] | length\')" -gt 0 ] && task setup'
+
+  run_:
+    desc: "Run"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "run")] | length\')" -gt 0 ] && task run'
+
+  shutdown_:
+    desc: "Shutdown"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "shutdown")] | length\')" -gt 0 ] && task shutdown'
+
+  teardown_:
+    desc: "Teardown"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "teardown")] | length\')" -gt 0 ] && task teardown'
+
+  clean_:
+    desc: "Clean"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "clean")] | length\')" -gt 0 ] && task clean'
+
+  completed_:
+    desc: "Completed"
+    cmds:
+      - '[ "$(task --list --json | jq \'[.tasks[] | select(.name == "completed")] | length\')" -gt 0 ] && task completed'
+
+{%- for file in files %}
+{{ file.content | safe }}
+{%- endfor %}
