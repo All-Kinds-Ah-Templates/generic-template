@@ -2,4 +2,28 @@
 import "{{ file }}"
 {%- endfor %}
 
+set dotenv-load
+set fallback
+set allow-duplicate-recipes
+
 default: run
+
+[linux]
+hello:
+  echo Hello from Linux!
+  uname -a
+
+[macos]
+hello:
+  echo Hello from Mac OS X!
+  sw_vers
+
+[unix]
+hello:
+  echo Hello from Unix!
+  cat /etc/os-release
+
+[windows]
+hello:
+  echo Hello from Windows!
+  systeminfo
