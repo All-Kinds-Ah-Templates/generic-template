@@ -1,0 +1,58 @@
+options:
+  attach: true
+  log_level: debug
+
+pipelines:
+  - name: ping
+
+    steps:
+      - name: Pong
+        commands:
+          - echo pong
+
+  - name: default
+
+    steps:
+      - name: preflight_
+        commands:
+          - echo Running preflight...
+          - '[ "$(pipelight ls | grep -c preflight)" -gt 0 ] && pipelight run preflight --attach'
+
+      - name: init_
+        commands:
+          - echo Running init...
+          - '[ "$(pipelight ls | grep -c init)" -gt 0 ] && pipelight run init --attach'
+
+      - name: setup_
+        commands:
+          - echo Running setup...
+          - '[ "$(pipelight ls | grep -c setup)" -gt 0 ] && pipelight run setup --attach'
+
+      - name: run_
+        commands:
+          - echo Running main...
+          - pipelight run run --attach
+
+      - name: shutdown_
+        commands:
+          - echo Running shutdown...
+          - '[ "$(pipelight ls | grep -c shutdown)" -gt 0 ] && pipelight run shutdown --attach'
+
+      - name: teardown_
+        commands:
+          - echo Running teardown...
+          - '[ "$(pipelight ls | grep -c teardown)" -gt 0 ] && pipelight run teardown --attach'
+
+      - name: clean_
+        commands:
+          - echo Running clean...
+          - '[ "$(pipelight ls | grep -c clean)" -gt 0 ] && pipelight run clean --attach'
+
+      - name: completed_
+        commands:
+          - echo Running completed...
+          - '[ "$(pipelight ls | grep -c completed)" -gt 0 ] && pipelight run completed --attach'
+
+{%- for file in files %}
+{{ file.content | safe }}
+{%- endfor %}

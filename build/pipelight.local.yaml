@@ -1,0 +1,105 @@
+pipelines:
+  - name: preflight
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: init
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: setup
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: run
+
+    steps:
+      - name: Run main task
+        commands:
+          - echo Running task...
+
+  - name: shutdown
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: teardown
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: clean
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two
+
+  - name: completed
+
+    steps:
+      - parallel:
+        - name: Test 1
+          commands:
+            - echo one
+            - echo two
+
+        - name: Test 2
+          commands:
+            - echo one
+            - echo two

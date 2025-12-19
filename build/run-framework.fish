@@ -36,9 +36,7 @@ function run-framework-get-run-cmd
         # Build JSON array for minijinja-cli
         set json (printf '[%s]' (string join ',' (for f in $files; echo "\"$f\""; end)))
         minijinja-cli (git rev-parse --show-toplevel)/build/run-framework.just.j2 -D files:=$json -o Justfile.run
-
-        # Run just
-        just -f Justfile.run
+        set cmd "just -f Justfile.run"
       end
 
     case taskfile.yaml
@@ -46,7 +44,22 @@ function run-framework-get-run-cmd
 
     case pipelight.yaml
       set path (dirname $file)
-      set cmd "cd $path ; pipelight trigger --flag default --attach ; pipelight logs -vv"
+      set cmd "cd $path ; pipelight run default --attach -vv"
+
+    case pipelight.local.yaml
+      # Build JSON array for minijinja-cli
+      set files_json '[]'
+
+      for file in (command ls *.pipe.yaml ^/dev/null | command grep -v '^pipelight.local.yaml$')
+        if test -f $file
+          set content (cat $file | command grep -v '^pipelines:' | jq -Rs .)
+          set name (printf '%s' $file | jq -Rs .)
+          set files_json (echo $files_json | jq ". + [{\"name\": $name, \"content\": $content}]")
+        end
+      end
+
+      minijinja-cli (git rev-parse --show-toplevel)/build/pipelight.runner.yaml.j2 -D <(echo $files_json | jq '{files: .}') -o pipelight.yaml
+      set cmd "pipelight run default --attach -vv"
 
     case dagu.yaml
       # TODO: loop `dagu status` until it's completed
@@ -121,6 +134,10 @@ end
 function run-framework-run-stage
   set stage $argv[1]
 
+  if not [ -d "run/scripts/$stage" ]
+    return
+  end
+
   mkdir ./run/scripts/$stage/{pre,post}
 
   # Search for pre scripts
@@ -133,26 +150,26 @@ function run-framework-run-stage
     end
   end
 
-  for f in (find --type f ./run/scripts/$stage/pre)
+  for f in (find -type f ./run/scripts/$stage/pre)
     set cmd (run-framework-get-run-cmd $f)
     set -a pre_scripts run-framework-run-prepost $cmd
   end
 
   # Run pre scripts
-  parallel -- $pre_scripts
+  parallel ::: $pre_scripts
   if not [ $status -eq 0 ]
     colorme red "Pre $stage failed. Exiting."
     return 1
   end
 
   # Search for stage scripts
-  for f in (find --type f ./run/scripts/$stage/run)
+  for f in (find -type f ./run/scripts/$stage/run)
     set cmd (run-framework-get-run-cmd $f)
     set -a run_scripts run-framework-run-prepost $cmd
   end
 
   if [ -n "$run_scripts" ]
-    parallel -- $run_scripts
+    parallel ::: $run_scripts
     if not [ $status -eq 0 ]
       colorme red "Run $stage failed. Exiting."
       return 1
@@ -224,15 +241,17 @@ function run-framework-run-stage
     end
   end
 
-  for f in (find --type f ./run/scripts/$stage/post)
+  for f in (find -type f ./run/scripts/$stage/post)
     set cmd (run-framework-get-run-cmd $f)
     set -a post_scripts run-framework-run-prepost $cmd
   end
 
   # Run post scripts
-  parallel -- $post_scripts
+  parallel ::: $post_scripts
   if not [ $status -eq 0 ]
     colorme red "Post $stage failed. Exiting."
     return 1
   end
 end
+
+run-framework $argv
