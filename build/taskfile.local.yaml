@@ -1,0 +1,8 @@
+vars:
+  something: Hello World
+
+tasks:
+  run:
+    desc: "Main run task"
+    cmds:
+      - echo "Running main task..."
