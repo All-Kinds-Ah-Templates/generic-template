@@ -30,10 +30,9 @@ function run-framework-get-run-cmd
       set cmd "just --justfile $file --verbose"
 
     case local.just
-      set files (command ls *.just ^/dev/null | command grep -v '^local.just$')
+      set files local.just (command ls *.just ^/dev/null | command grep -v '^local.just$')
 
       if test (count $files) -gt 0
-        # Build JSON array for minijinja-cli
         set json (printf '[%s]' (string join ',' (for f in $files; echo "\"$f\""; end)))
         minijinja-cli (git rev-parse --show-toplevel)/build/run-framework.just.j2 -D files:=$json -o Justfile.run
         set cmd "just -f Justfile.run"
@@ -42,13 +41,12 @@ function run-framework-get-run-cmd
     case taskfile.yaml
       set cmd "task --taskfile $file --verbose"
 
-    case taskfile.local.yaml
-      # Build JSON array for minijinja-cli
+    case local.task.yaml
       set files_json '[]'
 
-      for file in (command ls *.task.yaml ^/dev/null | command grep -v '^taskfile.local.yaml$')
+      for file in local.task.yaml (command ls *.task.yaml ^/dev/null | command grep -v '^local.task.yaml$')
         if test -f $file
-          set content (cat $file | command grep -Ev '^(version|tasks):' | (jq -Rs .)
+          set content (cat $file | command grep -Ev '^(version|tasks):' | jq -Rs .)
           set name (printf '%s' $file | jq -Rs .)
           set files_json (echo $files_json | jq ". + [{\"name\": $name, \"content\": $content}]")
         end
@@ -62,10 +60,9 @@ function run-framework-get-run-cmd
       set cmd "cd $path ; pipelight run default --attach -vv"
 
     case pipelight.local.yaml
-      # Build JSON array for minijinja-cli
       set files_json '[]'
 
-      for file in (command ls *.pipe.yaml ^/dev/null | command grep -v '^pipelight.local.yaml$')
+      for file in pipelight.local.yaml (command ls pipelight.*.yaml ^/dev/null | command grep -v '^pipelight.local.yaml$')
         if test -f $file
           set content (cat $file | command grep -v '^pipelines:' | jq -Rs .)
           set name (printf '%s' $file | jq -Rs .)
