@@ -388,6 +388,7 @@ tasks:
     deps:
       - task: run:cargo-license
       - task: run:cargo-deny
+      - task: run:feluda
 
   run:cargo-license:
     desc: "Run cargo-license"
@@ -398,6 +399,11 @@ tasks:
     desc: "Run cargo-deny"
     cmds:
       - echo cargo deny check licenses bans
+
+  run:feluda:
+    desc: "Run feluda"
+    cmds:
+      - echo feluda
 
   audit:bloat:
     desc: "Measure amount of bloat"
