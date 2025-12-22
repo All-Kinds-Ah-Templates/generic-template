@@ -362,11 +362,17 @@ tasks:
       - echo sonarcube run
 
   audit:deps:
-    desc: "Detect unused dependencies"
+    desc: "Detect unused dependencies and errors"
     deps:
+      - task: run:cargo-check
       - task: run:cargo-audit
       - task: run:cargo-machete
       - task: run:cargo-udeps
+
+  run:cargo-check:
+    desc: "Run cargo-check"
+    cmds:
+      - echo cargo check
 
   run:cargo-audit:
     desc: "Run cargo-audit"
