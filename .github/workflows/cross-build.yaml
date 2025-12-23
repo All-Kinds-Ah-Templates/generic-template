@@ -1,0 +1,348 @@
+name: Cross Build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+  workflow_run:
+    workflows: ["Tests"]
+    branches: [main]
+    types:
+      - completed
+
+jobs:
+  test:
+    name: ${{ matrix.os.name }}
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    strategy:
+      matrix:
+        os:
+          - arch: ubuntu-latest
+            name: Ubuntu
+
+          - arch: macos-latest
+            name: Mac OS X
+
+          - arch: windows-latest
+            name: Windows
+        rust: [stable]
+    runs-on: ${{ matrix.os.arch }}
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          disable-sudo: true
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            objects.githubusercontent.com:443
+            github-releases.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            azure.archive.ubuntu.com:80
+            changelogs.ubuntu.com:443
+            esm.ubuntu.com:443
+            security.ubuntu.com:80
+            packages.microsoft.com:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Run tests
+        run: task test
+
+  freebsd:
+    name: FreeBSD
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            objects.githubusercontent.com:443
+            github-releases.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            azure.archive.ubuntu.com:80
+            changelogs.ubuntu.com:443
+            esm.ubuntu.com:443
+            packages.microsoft.com
+            0.freebsd.pool.ntp.org:443
+            2.freebsd.pool.ntp.org:443
+            pkg.freebsd.org:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: FreeBSD
+        uses: vmactions/freebsd-vm@731e019efccfea928cd629783e7d14597b3a2505 # v1.1.5
+        with:
+          usesh: true
+          sync: rsync
+          copyback: false
+          prepare: |
+            mkdir -p /usr/local/etc/pkg/repos
+            cat << EOF > /usr/local/etc/pkg/repos/FreeBSD.conf
+            FreeBSD: {
+              url: "http://pkg.freebsd.org/\${ABI}/latest",
+              mirror_type: "none",
+              signature_type: "fingerprints",
+              fingerprints: "/usr/share/keys/pkg",
+              enabled: yes
+            }
+            EOF
+            pkg update -f ; pkg install -y curl rust-nightly
+
+          run: |
+            pwd
+            ls -lah
+            whoami
+            env
+            freebsd-version
+            sysctl hw.model
+            sysctl hw.ncpu
+            sysctl hw.physmem
+            sysctl hw.usermem
+            task test
+
+  openbsd:
+    name: OpenBSD
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            objects.githubusercontent.com:443
+            github-releases.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            azure.archive.ubuntu.com:80
+            changelogs.ubuntu.com:443
+            esm.ubuntu.com:443
+            packages.microsoft.com:443
+            cdn.openbsd.org
+            pool.ntp.org:443
+            time.cloudflare.com:443
+            www.google.com:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: OpenBSD
+        uses: vmactions/openbsd-vm@00c443658b29649d2105816a88d6b4b789d8a3bd # v1.2.7
+        with:
+          usesh: true
+          sync: rsync
+          copyback: false
+          prepare: |
+            pkg_add curl rust
+
+          run: |
+            pwd
+            ls -lah
+            whoami
+            env
+            task test
+
+  netbsd:
+    name: NetBSD
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            objects.githubusercontent.com:443
+            github-releases.githubusercontent.com:443
+            release-assets.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            archive.ubuntu.com:80
+            azure.archive.ubuntu.com:80
+            changelogs.ubuntu.com:443
+            motd.ubuntu.com:443
+            esm.ubuntu.com:443
+            packages.microsoft.com:443
+            security.ubuntu.com:80
+            2.netbsd.pool.ntp.org:443
+            cdn.NetBSD.org:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: NetBSD
+        uses: vmactions/netbsd-vm@a5b9ce495569cb1a0e22810ab4414ba9fbe09bea # 1.2.7
+        with:
+          usesh: true
+          sync: rsync
+          copyback: false
+          prepare: |
+            /usr/sbin/pkg_add pkgin
+            pkgin -y install curl rust
+
+          run: |
+            pwd
+            ls -lah
+            whoami
+            env
+            task test
+
+  alpine:
+    name: Alpine
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            dl-cdn.alpinelinux.org:80
+            gitlab.alpinelinux.org:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup
+        uses: jirutka/setup-alpine@092137b2b59839555e7432042a9533c64ed482a4 # v1
+        with:
+          branch: edge
+
+      - name: Run tests
+        shell: alpine.sh --root {0}
+        run: |
+          # apk add cargo
+          task test
+
+  arch:
+    name: Arch
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@20cf305ff2072d973412fa9b1e3a4f227bda3c76 # v2.14.0
+        with:
+          egress-policy: block
+          allowed-endpoints: >
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            fulcio.sigstore.dev:443
+            github.com:443
+            oss-fuzz-build-logs.storage.googleapis.com:443
+            rekor.sigstore.dev:443
+            tuf-repo-cdn.sigstore.dev:443
+            www.bestpractices.dev:443
+            objects.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            2.netbsd.pool.ntp.org:443
+            archlinux.org:443
+            geo.mirror.pkgbuild.com:443
+            openpgpkey.archlinux.org:443
+
+      - name: Checkout sources
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+
+      - name: Setup
+        uses: RangHo/setup-arch@19885eda0c0b0d1791e61e1d32f2552d42944b14 # main
+        #with:
+        #  packages: "rust"
+
+      - name: Run tests
+        run: |
+          task test
+
+# TODO: Add support for more OSs
+# - OpenSUSE
+# - Rocky Linux
+# - Fedora
+# - Gentoo
+# - Slackware
