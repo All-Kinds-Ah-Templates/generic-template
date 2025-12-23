@@ -24,6 +24,27 @@ format:
 audit:
   task audit
 
+@doctor:
+  echo "\n\n=== Just Doctor ===\n\n"
+  just -l
+  echo "\n\n=== Taskfile Doctor ===\n\n"
+  task -l
+  echo "\n\n=== Mise Doctor ===\n\n"
+  mise tasks
+  mise list
+  mise doctor
+  echo "\n\n=== Pipelight Doctor ===\n\n"
+  pipelight ls
+  echo "\n\n=== Lefthook Doctor ===\n\n"
+  lefthook validate
+  echo "\n\n=== Prek Doctor ===\n\n"
+  prek list
+  echo "\n\n=== Comtrya Doctor ===\n\n"
+  comtrya -d manifests status
+  echo "\n\n=== Goji Doctor ===\n\n"
+  goji check
+  COUNT=$(cat .goji.json | jq '.types | length') ; echo "\n\nFound $COUNT goji types."
+
 [parallel]
 check: lint format test
 
@@ -53,6 +74,8 @@ install:
   lefthook install
   prek install
   prek auto-upgrade
+  mise trust --quiet .mise.toml
+  @[ -f ".mise.local.toml" ] && mise trust --quiet .mise.local.toml || return 0
 
 setup:
   echo "Begin setup..."

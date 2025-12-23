@@ -16,3 +16,6 @@ Cargo.lock
 
 # Documentation builds
 build/output/
+
+# Mise local config (may contain secrets)
+.mise.local.toml
