@@ -89,6 +89,10 @@ clean:
 help:
   task help
 
+up:
+  echo "Updating installed software..."
+  mise up --bump
+
 bump:
   echo "Bump release..."
 
