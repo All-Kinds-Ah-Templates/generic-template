@@ -76,6 +76,7 @@ install:
   prek auto-upgrade
   mise trust --quiet .mise.toml
   @[ -f ".mise.local.toml" ] && mise trust --quiet .mise.local.toml || return 0
+  mise install
 
 setup:
   echo "Begin setup..."
