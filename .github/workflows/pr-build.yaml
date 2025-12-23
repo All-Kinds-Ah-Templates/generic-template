@@ -1,0 +1,71 @@
+name: PR Build
+
+on:
+  pull_request_target:
+    types: [labeled, synchronize]
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    if: contains(github.event.pull_request.labels.*.name, 'needs-build')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0
+
+      - name: Release Build
+        uses: yonasBSD/toolkit@9067fa17c79d97c3bad28da5ebba1d3c32ab3582 # v0.1.0
+        with:
+          run: |
+            cargo auditable build --release
+
+      - name: Set env
+        run: echo "NFPM_VERSION=$(curl -sL https://api.github.com/repos/goreleaser/nfpm/releases/latest | jq -r ".tag_name" | cut -d'v' -f2)" >> $GITHUB_ENV
+
+      - name: Create Packages
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: |
+           wget https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_amd64.deb
+           sudo dpkg -i nfpm_${NFPM_VERSION}_amd64.deb
+           rm nfpm_${NFPM_VERSION}_amd64.deb
+           sed -i -E "s/^version:.+$/version: $VERSION/g" nfpm.yaml
+           mkdir scripts
+           touch foo bar scripts/postremove.sh scripts/preremove.sh scripts/preinstall.sh scripts/postinstall.sh changelog.yaml foobar.conf
+           for pkg in deb apk archlinux rpm ipk; do
+              nfpm package -p $pkg
+           done
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        id: artifact-upload-step
+        with:
+          name: ${{ env.PROJECT_NAME_UNDERSCORE }}
+          path: |
+            *.deb
+            *.apk
+            *.ipk
+            *.rpm
+            *.zst
+
+      - uses: peter-evans/find-comment@v3
+        id: find-comment
+        with:
+          token: ${{ secrets.GH_PAT || github.token }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: '📦 Build artifacts ready!'
+
+      - uses: peter-evans/create-or-update-comment@v4
+        with:
+          token: ${{ secrets.GH_PAT || github.token }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            ## 📦 Build artifacts ready!
+            Download binaries from [this workflow run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}).
+          edit-mode: replace
