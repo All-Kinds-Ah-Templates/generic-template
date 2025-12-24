@@ -27,7 +27,7 @@ jobs:
           submodules: recursive
 
       - name: Super-linter
-        uses: github/super-linter@v7
+        uses: github/super-linter@b807e99ddd37e444d189cfd2c2ca1274d8ae8ef1 # v7
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -51,7 +51,7 @@ jobs:
 
     steps:
       - name: Writes changes in the local checkout
-        uses: crate-ci/typos@v1.40.0
+        uses: crate-ci/typos@24c5854966d17070a3b25e2c2dfc63ec5bc94cf4 # v1.40.0
         with:
           write_changes: true
 
@@ -67,7 +67,7 @@ jobs:
           submodules: recursive
 
       - name: Run zizmor 🌈
-        uses: zizmorcore/zizmor-action@v0.3.0
+        uses: zizmorcore/zizmor-action@e639db99335bc9038abc0e066dfcd72e23d26fb4 # v0.3.0
 
   todo-list:
     name: Remaining Todos
@@ -78,7 +78,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Install Rust toolchain
-        uses: dtolnay/rust-toolchain@v1
+        uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
 
       - name: Install cargo-binstall
         uses: cargo-bins/cargo-binstall@4a9028576ed64318f7b24193a62695e96dcbe015 # main

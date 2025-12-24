@@ -1,9 +1,11 @@
 linters:
     default: all
     enable:
-        - permissions
         - versions
         - format
+        - secrets
+        - injection
+        - permissions
     disable: []
     settings: {}
 upgrade:

@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@0.33.1
+        uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # 0.33.1
         with:
           scan-type: "fs" # Scan the filesystem (repo)
           scan-ref: "." # Scan the current directory
@@ -47,7 +47,7 @@ jobs:
 
       - name: Run TruffleHog OSS
         # Use the official TruffleHog action
-        uses: trufflesecurity/trufflehog@v3.92.4
+        uses: trufflesecurity/trufflehog@ef6e76c3c4023279497fab4721ffa071a722fd05 # v3.92.4
         with:
           # Scan only for verified secrets (fewer false positives)
           extra_args: --results=verified,unknown
