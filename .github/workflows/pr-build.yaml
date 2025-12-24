@@ -13,7 +13,7 @@ jobs:
     if: contains(github.event.pull_request.labels.*.name, 'needs-build')
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
@@ -31,14 +31,14 @@ jobs:
         env:
           VERSION: ${{ github.ref_name }}
         run: |
-           wget https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_amd64.deb
+          wget https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_amd64.deb
            sudo dpkg -i nfpm_${NFPM_VERSION}_amd64.deb
            rm nfpm_${NFPM_VERSION}_amd64.deb
            sed -i -E "s/^version:.+$/version: $VERSION/g" nfpm.yaml
            mkdir scripts
            touch foo bar scripts/postremove.sh scripts/preremove.sh scripts/preinstall.sh scripts/postinstall.sh changelog.yaml foobar.conf
            for pkg in deb apk archlinux rpm ipk; do
-              nfpm package -p $pkg
+             nfpm package -p $pkg
            done
 
       - name: Upload Artifact
@@ -53,14 +53,14 @@ jobs:
             *.rpm
             *.zst
 
-      - uses: peter-evans/find-comment@v3
+      - uses: peter-evans/find-comment@v4.0.0
         id: find-comment
         with:
           token: ${{ secrets.GH_PAT || github.token }}
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '📦 Build artifacts ready!'
 
-      - uses: peter-evans/create-or-update-comment@v4
+      - uses: peter-evans/create-or-update-comment@v5.0.0
         with:
           token: ${{ secrets.GH_PAT || github.token }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}

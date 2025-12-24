@@ -108,7 +108,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: FreeBSD
-        uses: vmactions/freebsd-vm@731e019efccfea928cd629783e7d14597b3a2505 # v1.1.5
+        uses: vmactions/freebsd-vm@v1.3.0
         with:
           usesh: true
           sync: rsync
@@ -180,7 +180,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: OpenBSD
-        uses: vmactions/openbsd-vm@00c443658b29649d2105816a88d6b4b789d8a3bd # v1.2.7
+        uses: vmactions/openbsd-vm@v1.2.7
         with:
           usesh: true
           sync: rsync
@@ -286,7 +286,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Setup
-        uses: jirutka/setup-alpine@092137b2b59839555e7432042a9533c64ed482a4 # v1
+        uses: jirutka/setup-alpine@v1.4.1
         with:
           branch: edge
 

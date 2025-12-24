@@ -19,10 +19,10 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
       - name: Run Trivy scan
-        uses: aquasecurity/trivy-action@master
+        uses: aquasecurity/trivy-action@0.33.1
         with:
           scan-type: "fs" # Scan the filesystem (repo)
           scan-ref: "." # Scan the current directory
@@ -31,7 +31,7 @@ jobs:
           severity: "CRITICAL,HIGH"
 
       - name: Upload Trivy scan results to GitHub Code Scanning
-        uses: github/codeql-action/upload-sarif@v4
+        uses: github/codeql-action/upload-sarif@cf1bb45a277cb3c205638b2cd5c984db1c46a412 # v4.31.7
         with:
           sarif_file: "trivy-results.sarif"
           name: TruffleHog Secret Scan
@@ -40,14 +40,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           # Fetch all history to ensure a complete scan
           fetch-depth: 0
 
       - name: Run TruffleHog OSS
         # Use the official TruffleHog action
-        uses: trufflesecurity/trufflehog@main
+        uses: trufflesecurity/trufflehog@v3.92.4
         with:
           # Scan only for verified secrets (fewer false positives)
           extra_args: --results=verified,unknown
