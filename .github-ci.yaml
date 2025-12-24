@@ -3,6 +3,7 @@ linters:
     enable:
         - permissions
         - versions
+        - format
     disable: []
     settings: {}
 upgrade:
