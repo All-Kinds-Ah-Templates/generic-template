@@ -90,9 +90,11 @@ clean:
 help:
   task help
 
-up:
+alias up := upgrade
+
+upgrade:
   echo "Updating installed software..."
-  mise up --bump
+  task upgrade
 
 bump:
   echo "Bump release..."

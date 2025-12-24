@@ -446,3 +446,25 @@ tasks:
     desc: "Run cargo-clippy"
     cmds:
       - cargo clippy --fix --allow-dirty
+
+  upgrade:
+    desc: "Perform upgrades"
+    deps: ["upgrade:tools", "upgrade:workflows"]
+
+  upgrade:tools:
+    desc: "Upgrade tools"
+    deps: ["run:mise-up"]
+
+  run:mise-up:
+    desc: "Run mise up"
+    cmds:
+      - mise up --bump
+
+  upgrade:workflows:
+    desc: "Upgrade workflows"
+    deps: ["run:github-ci-upgrade"]
+
+  run:github-ci-upgrade:
+    desc: "Run github-ci upgrade"
+    cmds:
+      - github-ci upgrade

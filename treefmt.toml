@@ -21,3 +21,15 @@ command = "oxfmt"
 options = []
 excludes = []
 includes = ["*.js", "*.ts"]
+
+[formatter.workflows-check]
+command = "github-ci"
+options = ["lint"]
+excludes = []
+includes = [".github/workflows/*.yaml"]
+
+[formatter.workflows-format]
+command = "github-ci"
+options = ["lint", "--fix"]
+excludes = []
+includes = [".github/workflows/*.yaml"]

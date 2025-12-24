@@ -1,0 +1,84 @@
+linters:
+    default: all
+    enable:
+        - permissions
+        - versions
+    disable: []
+    settings: {}
+upgrade:
+    actions:
+        RangHo/setup-arch:
+            version: ^1.0.0
+        actions-ecosystem/action-add-labels:
+            version: ^1.0.0
+        actions/attest-build-provenance:
+            version: ^1.0.0
+        actions/checkout:
+            version: ^1.0.0
+        actions/dependency-review-action:
+            version: ^1.0.0
+        actions/first-interaction:
+            version: ^1.0.0
+        actions/github-script:
+            version: ^1.0.0
+        actions/labeler:
+            version: ^1.0.0
+        actions/stale:
+            version: ^1.0.0
+        actions/upload-artifact:
+            version: ^1.0.0
+        alstr/todo-to-issue-action:
+            version: ^1.0.0
+        amannn/action-semantic-pull-request:
+            version: ^1.0.0
+        aquasecurity/trivy-action:
+            version: ^0.1.0
+        cargo-bins/cargo-binstall:
+            version: ^1.0.0
+        cocogitto/cocogitto-action:
+            version: ^1.0.0
+        codecov/codecov-action:
+            version: ^1.0.0
+        crate-ci/typos:
+            version: ^1.0.0
+        dependabot/fetch-metadata:
+            version: ^1.0.0
+        dtolnay/rust-toolchain:
+            version: ^1.0.0
+        github/codeql-action/upload-sarif:
+            version: ^1.0.0
+        github/super-linter:
+            version: ^1.0.0
+        jirutka/setup-alpine:
+            version: ^1.0.0
+        ncipollo/release-action:
+            version: ^1.0.0
+        orhun/git-cliff-action:
+            version: ^1.0.0
+        ossf/scorecard-action:
+            version: ^1.0.0
+        peter-evans/create-or-update-comment:
+            version: ^1.0.0
+        peter-evans/create-pull-request:
+            version: ^1.0.0
+        peter-evans/find-comment:
+            version: ^1.0.0
+        phntmxyz/pr_todo_checker:
+            version: ^1.0.0
+        step-security/harden-runner:
+            version: ^1.0.0
+        trufflesecurity/trufflehog:
+            version: ^1.0.0
+        vmactions/freebsd-vm:
+            version: ^1.0.0
+        vmactions/netbsd-vm:
+            version: ^1.0.0
+        vmactions/openbsd-vm:
+            version: ^1.0.0
+        yonasBSD/coverage-badge:
+            version: ^0.1.0
+        yonasBSD/toolkit:
+            version: ^0.1.0
+        zizmorcore/zizmor-action:
+            version: ^0.1.0
+    version: tag
