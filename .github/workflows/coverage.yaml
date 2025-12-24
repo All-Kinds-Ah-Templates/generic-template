@@ -9,8 +9,25 @@ on: # yamllint disable-line rule:truthy
       - dev
 
 jobs:
+  check-cargo:
+    runs-on: ubuntu-latest
+    outputs:
+      exists: ${{ steps.check.outputs.exists }}
+
+    steps:
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - id: check
+        run: |
+          if [ -f "Cargo.toml" ]; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+          fi
+
   codecov:
     name: CodeCov
+    needs: check-cargo
+    if: needs.check-cargo.outputs.exists == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -36,6 +53,8 @@ jobs:
 
   badge:
     name: Coverage Badge
+    needs: check-cargo
+    if: needs.check-cargo.outputs.exists == 'true'
     runs-on: ubuntu-latest
     permissions:
       contents: write
