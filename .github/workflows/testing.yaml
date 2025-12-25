@@ -24,7 +24,13 @@ jobs:
           fetch-depth: 0
 
       - name: Build
-        run: task build
+        uses: yonasBSD/toolkit@9067fa17c79d97c3bad28da5ebba1d3c32ab3582 # v0.1.0
+        with:
+          run: |
+            task build
 
       - name: Run tests
-        run: task test
+        uses: yonasBSD/toolkit@9067fa17c79d97c3bad28da5ebba1d3c32ab3582 # v0.1.0
+        with:
+          run: |
+            task test
