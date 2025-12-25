@@ -44,12 +44,20 @@ jobs:
 
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@9a9fe03b31c47444290c0d7f9b1ee1b44ee13f20 # main
+        with:
+          command: check
 
   spellchecking:
     name: Spell checking and corrections
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
       - name: Writes changes in the local checkout
         uses: crate-ci/typos@24c5854966d17070a3b25e2c2dfc63ec5bc94cf4 # v1.40.0
         with:
