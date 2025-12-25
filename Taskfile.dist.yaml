@@ -28,8 +28,6 @@ vars:
   hostname:
     sh: hostname
   taskEnv: .task.env
-  os: ["windows", "linux", "darwin"]
-  arch: ["amd64", "arm64"]
 
 tasks:
   default:
@@ -72,10 +70,8 @@ tasks:
       - echo Build...
       - for:
           matrix:
-            OS:
-              ref: OS_VAR
-            ARCH:
-              ref: ARCH_VAR
+            OS: [windows, linux, darwin]
+            ARCH: [amd64, arm64]
         cmd: echo "{{.ITEM.OS}}/{{.ITEM.ARCH}}"
       - defer: { task: cleanup }
 
