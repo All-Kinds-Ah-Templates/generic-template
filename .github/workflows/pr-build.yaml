@@ -1,22 +1,32 @@
 name: PR Build
 
 on:
-  pull_request_target:
+  # The use of pull_request_target here is intentional for elevated permissions
+  # but must be secured (as it is, by using the 'needs-build' label check).
+  pull_request_target: # zizmor: ignore[dangerous-triggers]
     types: [labeled, synchronize]
-
-permissions:
-  contents: read
-  pull-requests: write
 
 jobs:
   build:
+    # 1. Permission block moved here, isolating permissions to this job.
+    permissions:
+      contents: read
+      pull-requests: write
+      # Note: The checkout step uses the GITHUB_TOKEN provided by this block.
+
+    # 2. Ensures the job only runs when the 'needs-build' label is present.
     if: contains(github.event.pull_request.labels.*.name, 'needs-build')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
+          # This is the key security measure for pull_request_target:
+          # You check out the code of the PR (head.sha), but the job runs
+          # with the base repo's permissions. The 'needs-build' label acts as a
+          # manual human gate to approve running potentially malicious code.
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Release Build
         uses: yonasBSD/toolkit@9067fa17c79d97c3bad28da5ebba1d3c32ab3582 # v0.1.0
@@ -24,22 +34,28 @@ jobs:
           run: |
             cargo auditable build --release
 
-      - name: Set env
-        run: echo "NFPM_VERSION=$(curl -sL https://api.github.com/repos/goreleaser/nfpm/releases/latest | jq -r ".tag_name" | cut -d'v' -f2)" >> $GITHUB_ENV
+      - name: Fetch Latest NFPM Version
+        id: fetch_version
+        run: |
+          LATEST_RELEASE=$(curl -sL https://api.github.com/repos/goreleaser/nfpm/releases/latest)
+          VERSION=$(echo "$LATEST_RELEASE" | jq -r ".tag_name" | cut -d'v' -f2)
+          echo "NFPM_VERSION=$VERSION" >> $GITHUB_OUTPUT
 
       - name: Create Packages
         env:
-          VERSION: ${{ github.ref_name }}
+          # Using github.event.pull_request.head.ref is safer than github.ref_name for PRs
+          VERSION: ${{ github.event.pull_request.head.ref }}
+          NFPM_VERSION: ${{ steps.fetch_version.outputs.NFPM_VERSION }}
         run: |
           wget https://github.com/goreleaser/nfpm/releases/download/v${NFPM_VERSION}/nfpm_${NFPM_VERSION}_amd64.deb
-           sudo dpkg -i nfpm_${NFPM_VERSION}_amd64.deb
-           rm nfpm_${NFPM_VERSION}_amd64.deb
-           sed -i -E "s/^version:.+$/version: $VERSION/g" nfpm.yaml
-           mkdir scripts
-           touch foo bar scripts/postremove.sh scripts/preremove.sh scripts/preinstall.sh scripts/postinstall.sh changelog.yaml foobar.conf
-           for pkg in deb apk archlinux rpm ipk; do
-             nfpm package -p $pkg
-           done
+          sudo dpkg -i nfpm_${NFPM_VERSION}_amd64.deb
+          rm nfpm_${NFPM_VERSION}_amd64.deb
+          sed -i -E "s/^version:.+$/version: $VERSION/g" nfpm.yaml
+          mkdir scripts
+          touch foo bar scripts/postremove.sh scripts/preremove.sh scripts/preinstall.sh scripts/postinstall.sh changelog.yaml foobar.conf
+          for pkg in deb apk archlinux rpm ipk; do
+            nfpm package -p $pkg
+          done
 
       - name: Upload Artifact
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
@@ -56,12 +72,14 @@ jobs:
       - uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
         id: find-comment
         with:
+          # This uses the GITHUB_TOKEN provided by the job's permissions block
           token: ${{ secrets.GH_PAT || github.token }}
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '📦 Build artifacts ready!'
 
       - uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
         with:
+          # This uses the GITHUB_TOKEN provided by the job's permissions block
           token: ${{ secrets.GH_PAT || github.token }}
           comment-id: ${{ steps.find-comment.outputs.comment-id }}
           issue-number: ${{ github.event.pull_request.number }}

@@ -5,11 +5,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
-permissions:
-  contents: read # Required to checkout the code
-  issues: write # Allows the action to comment on issues/PRs (optional, but useful)
-  pull-requests: write # Allows the action to comment on PRs (optional, but useful)
-
 jobs:
   trivy:
     runs-on: ubuntu-latest
@@ -20,6 +15,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Run Trivy scan
         uses: aquasecurity/trivy-action@b6643a29fecd7f34b3597bc6acb0a98b03d33ff8 # 0.33.1
@@ -37,12 +34,19 @@ jobs:
 
   trufflehog:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      issues: write
+      pull-requests: write
+
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           # Fetch all history to ensure a complete scan
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Run TruffleHog OSS
         # Use the official TruffleHog action

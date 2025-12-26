@@ -102,6 +102,7 @@ jobs:
                 labels: labelsToAdd
               });
             }
+          persist-credentials: false
 
   label-cleanup:
     runs-on: ubuntu-latest

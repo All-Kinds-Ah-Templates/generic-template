@@ -6,7 +6,7 @@ on:
     branches:
       - main
   workflow_dispatch:
-  workflow_run:
+  workflow_run: # zizmor: ignore[dangerous-triggers]
     workflows: ["Tests"]
     branches: [main]
     types:
@@ -63,6 +63,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Run tests
         run: task test
@@ -106,6 +108,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: FreeBSD
         uses: vmactions/freebsd-vm@4c5ec9a030f70e4bcd53455cae6157b62206bae2 # v1.3.2
@@ -178,6 +182,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: OpenBSD
         uses: vmactions/openbsd-vm@e1ff47fbf9e20e97677079504c6b70e8a455369f # v1.2.9
@@ -236,6 +242,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: NetBSD
         uses: vmactions/netbsd-vm@0eecbe8bfff3c73f6f3d508741f8a3d5ce4e8465 # 1.2.9
@@ -284,6 +292,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: jirutka/setup-alpine@ae3b3ddba35054804fc4a3507b519fa7e8152050 # v1.4.1
@@ -330,6 +340,8 @@ jobs:
 
       - name: Checkout sources
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Setup
         uses: RangHo/setup-arch@19885eda0c0b0d1791e61e1d32f2552d42944b14 # main

@@ -33,6 +33,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+          persist-credentials: false
 
       - name: Install dependencies
         run: |

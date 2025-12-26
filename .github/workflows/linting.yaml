@@ -25,6 +25,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+          persist-credentials: false
 
       - name: Super-linter
         uses: github/super-linter@b807e99ddd37e444d189cfd2c2ca1274d8ae8ef1 # v7
@@ -41,6 +42,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+          persist-credentials: false
 
       - name: Conventional commit check
         uses: cocogitto/cocogitto-action@9a9fe03b31c47444290c0d7f9b1ee1b44ee13f20 # main
@@ -57,6 +59,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+          persist-credentials: false
 
       - name: Writes changes in the local checkout
         uses: crate-ci/typos@2d0ce569feab1f8752f1dde43cc2f2aa53236e06 # v1.40.0
@@ -73,6 +76,7 @@ jobs:
         with:
           fetch-depth: 0
           submodules: recursive
+          persist-credentials: false
 
       - name: Run zizmor 🌈
         uses: zizmorcore/zizmor-action@e639db99335bc9038abc0e066dfcd72e23d26fb4 # v0.3.0
@@ -84,6 +88,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          persist-credentials: false
 
       - name: Install Rust toolchain
         uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1

@@ -361,13 +361,17 @@ tasks:
 
   audit:code-quality:
     desc: "Look for code smells"
-    cmds:
-      - task: run:sonarcube
+    deps: ["run:sonarcube", "run:zizmor"]
 
   run:sonarcube:
     desc: "Run sonarcube"
     cmds:
       - echo sonarcube run
+
+  run:zizmor:
+    desc: "Run zizmor"
+    cmds:
+      - zizmor --pedantic .github/workflows
 
   audit:deps:
     desc: "Detect unused dependencies and errors"
