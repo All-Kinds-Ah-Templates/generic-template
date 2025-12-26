@@ -22,6 +22,7 @@ jobs:
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Build
         uses: yonasBSD/toolkit@9067fa17c79d97c3bad28da5ebba1d3c32ab3582 # v0.1.0
