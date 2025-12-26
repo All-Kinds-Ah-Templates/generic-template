@@ -37,7 +37,7 @@ A generic template to base your language-specific templates.
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
   - [cargo-deny](https://github.com/EmbarkStudios/cargo-deny) and [cargo-auditable](https://github.com/rust-secure-code/cargo-auditable) license and SBOM management
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
-  - [rspress](https://github.com/web-infra-dev/rspress) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
+  - [doctave](https://github.com/yonasBSD/doctave) and [mdbook](https://github.com/rust-lang/mdBook) documentation sites
   - [typst](https://github.com/typst/typst) citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
   - [d2](https://github.com/terrastruct/d2) graphs
   - abc and [basilk](https://github.com/GabAlpha/basilk) todo list / kanban manager
@@ -63,6 +63,7 @@ just build
   - cocogitto
   - comtrya
   - d2
+  - doctave
   - git-cliff
   - git-graph
   - goji

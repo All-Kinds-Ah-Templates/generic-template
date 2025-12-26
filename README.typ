@@ -28,7 +28,7 @@ A generic template to base your language-specific templates.
 - #link("https://github.com/aquasecurity/trivy")[trivy] and #link("https://github.com/trufflesecurity/trufflehog")[trufflehog] security scanning
 - #link("https://github.com/EmbarkStudios/cargo-deny")[cargo-deny] and #link("https://github.com/rust-secure-code/cargo-auditable")[cargo-auditable] license and SBOM management
 - #link("https://github.com/ovh/venom")[venom] and #link("https://github.com/Orange-OpenSource/hurl")[hurl] test suites
-- #link("https://github.com/web-infra-dev/rspress")[rspress] and #link("https://github.com/rust-lang/mdBook")[mdbook] documentation sites
+- #link("https://github.com/yonasBSD/doctave")[doctave] and #link("https://github.com/rust-lang/mdBook")[mdbook] documentation sites
 - #link("https://github.com/typst/typst")[typst] citations, footnotes, bibliography, tables, figures, diagrams, graphs, flow charts, math formulas, symbols, emoji, scripting, PDF and HTML exports
 - #link("https://github.com/terrastruct/d2")[d2] graphs
 - abc and #link("https://github.com/GabAlpha/basilk")[basilk] todo list / kanban manager
@@ -59,6 +59,7 @@ just build
 - cocogitto
 - comtrya
 - d2
+- doctave
 - git-cliff
 - git-graph
 - goji

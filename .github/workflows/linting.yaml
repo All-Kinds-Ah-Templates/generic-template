@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  conventional_commits:
+  conventional-commits:
     name: Check conventional commit compliance
     runs-on: ubuntu-latest
 
