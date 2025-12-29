@@ -238,7 +238,7 @@ tasks:
       - "echo Start server: www --port 4002 ../../../build/output/docs/technical/docapella"
 
   run:doctave:
-    desc: "Build doctave user guides notes"
+    desc: "Build doctave user guides"
     generates:
       - "./docs/user-guides/doctave"
     vars:
@@ -285,29 +285,43 @@ tasks:
   #- yarn build
   #- 'echo Start server: www --port 4005 build'
 
-  run:rspress:
-    desc: "Build rspress user guides"
+  #run:rspress:
+  #  desc: "Build rspress user guides"
+  #  generates:
+  #    - "./docs/user-guides/rspress-site"
+  #  interactive: true
+  #  cmds:
+  #    - echo Building rspress-site...
+  #    - if [ ! -d rspress-site ]; then bun create -y rspress@latest ; fi
+  #    - cd rspress-site
+  #    - cp ../rspress.config.ts .
+  #    - bun install
+  #    - bun run build
+  #    - "echo Start server: www --port 4005 build"
+
+  run:dodeca:
+    desc: "Build dodeca release notes"
     generates:
-      - "./docs/user-guides/rspress-site"
-    interactive: true
+      - "./docs/blog/dodeca"
+    vars:
+      build_dir: ../../../build/output/docs/release-notes/dodeca
     cmds:
-      - echo Building rspress-site...
-      - if [ ! -d rspress-site ]; then bun create -y rspress@latest ; fi
-      - cd rspress-site
-      - cp ../rspress.config.ts .
-      - bun install
-      - bun run build
-      - "echo Start server: www --port 4005 build"
+      - echo Building dodeca...
+      - if [ ! -d dodeca ]; then mkdir -p docs/release-notes ; cd docs/release-notes ; ddc init dodeca ; fi
+      - cd docs/release-notes/dodeca ; mkdir -p {{ .build_dir }} ; ddc build --output {{ .build_dir }}
+      - 'echo Start server: www --port 4005 {{ .build_dir }}'
 
   run:zola:
-    desc: "Build zola blog and release notes"
+    desc: "Build zola blog"
     generates:
       - "./docs/blog/zola"
+    vars:
+      build_dir: ../../../build/output/docs/blog/zola
     cmds:
       - echo Building zola...
       - if [ ! -d zola ]; then mkdir -p docs/blog ; cd docs/blog ; zola init zola ; fi
-      - cd docs/blog/zola ; mkdir -p ../../../build/output/docs/blog/zola ; zola build --force --base-url https://localhost:4006 --output-dir ../../../build/output/docs/blog/zola
-      - "echo Start server: www --port 4006 ../../../build/output/docs/blog/zola"
+      - cd docs/blog/zola ; mkdir -p {{ .build_dir }} ; zola build --force --base-url https://localhost:4006 --output-dir {{ .build_dir }}
+      - 'echo Start server: www --port 4006 {{ .build_dir }}'
 
   run:pagoda:
     desc: "Build pagoda site"
