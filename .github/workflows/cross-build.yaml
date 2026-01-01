@@ -186,7 +186,7 @@ jobs:
           persist-credentials: false
 
       - name: OpenBSD
-        uses: vmactions/openbsd-vm@e1ff47fbf9e20e97677079504c6b70e8a455369f # v1.2.9
+        uses: vmactions/openbsd-vm@00753f2835e62704570734312de6f212069dfef7 # v1.3.1
         with:
           usesh: true
           sync: rsync
