@@ -246,7 +246,7 @@ jobs:
           persist-credentials: false
 
       - name: NetBSD
-        uses: vmactions/netbsd-vm@0eecbe8bfff3c73f6f3d508741f8a3d5ce4e8465 # 1.2.9
+        uses: vmactions/netbsd-vm@2ba9902c77c2ebdb7501e5e9308dea03f0f251c4 # 1.3.1
         with:
           usesh: true
           sync: rsync
