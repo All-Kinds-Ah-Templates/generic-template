@@ -70,7 +70,7 @@ lint-commit-msg file:
     return 1
   fi
 
-install:
+setup:
   lefthook install
   prek install
   prek auto-upgrade
@@ -78,8 +78,9 @@ install:
   @[ -f ".mise.local.toml" ] && mise trust --quiet .mise.local.toml || return 0
   mise install
 
-setup:
-  echo "Begin setup..."
+install:
+  task build
+  echo "TODO: Move binary to ~/.local/bin or /usr/local/bin"
 
 env:
   echo "Setup environment variables..."
