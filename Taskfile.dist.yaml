@@ -449,7 +449,7 @@ tasks:
 
   fix:
     desc: "Format files"
-    deps: ["run:cargo-fmt", "run:cargo-clippy"]
+    deps: ["run:cargo-fmt", "run:cargo-clippy", "run:copilot"]
 
   run:cargo-fmt:
     desc: "Run cargo-fmt"
@@ -460,6 +460,13 @@ tasks:
     desc: "Run cargo-clippy"
     cmds:
       - cargo clippy --fix --allow-dirty
+
+  run:copilot:
+    desc: "Run copilot"
+    status:
+      - "! command -v copilot"
+    cmds:
+      - copilot -p "fix all build errors and warnings" --allow-all-tools
 
   upgrade:
     desc: "Perform upgrades"
