@@ -34,6 +34,7 @@ A generic template to base your language-specific templates.
   - [superhtml](https://github.com/kristoff-it/superhtml) html linter
   - [minijinja](https://github.com/mitsuhiko/minijinja) templating
   - [treefmt](https://github.com/numtide/treefmt) and [typstyle](https://github.com/Enter-tainer/typstyle) code formatting
+  - [swab](https://github.com/yonasBSD/swab) file / directory cleaning
   - [trivy](https://github.com/aquasecurity/trivy) and [trufflehog](https://github.com/trufflesecurity/trufflehog) security scanning 
   - [cargo-deny](https://github.com/EmbarkStudios/cargo-deny) and [cargo-auditable](https://github.com/rust-secure-code/cargo-auditable) license and SBOM management
   - [venom](https://github.com/ovh/venom) and [hurl](https://github.com/Orange-OpenSource/hurl) test suites
@@ -80,6 +81,7 @@ just build
   - rcl
   - rsign
   - superhtml
+  - swab
   - treefmt
   - trivy
   - trufflehog
