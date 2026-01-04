@@ -26,6 +26,7 @@ A generic template to base your language-specific templates.
 - #link("https://github.com/mitsuhiko/minijinja")[minijinja] templating
 - #link("https://github.com/numtide/treefmt")[treefmt] and #link("https://github.com/Enter-tainer/typstyle")[typstyle] code formatting
 - #link("https://github.com/aquasecurity/trivy")[trivy] and #link("https://github.com/trufflesecurity/trufflehog")[trufflehog] security scanning
+- #link("https://github.com/yonasBSD/swab")[swab] file / directory cleaning
 - #link("https://github.com/EmbarkStudios/cargo-deny")[cargo-deny] and #link("https://github.com/rust-secure-code/cargo-auditable")[cargo-auditable] license and SBOM management
 - #link("https://github.com/ovh/venom")[venom] and #link("https://github.com/Orange-OpenSource/hurl")[hurl] test suites
 - #link("https://github.com/yonasBSD/doctave")[doctave], #link("https://github.com/bearcove/dodeca")[doctave], and #link("https://github.com/rust-lang/mdBook")[mdbook] documentation sites
@@ -76,6 +77,7 @@ just build
 - rcl
 - rsign
 - superhtml
+- swab
 - treefmt
 - trivy
 - trufflehog

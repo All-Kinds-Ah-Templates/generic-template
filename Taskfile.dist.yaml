@@ -139,12 +139,12 @@ tasks:
 
   clean:
     desc: "Clean up"
-    deps: ["run:cargo-clean", "run:mise-clean"]
+    deps: ["run:swab", "run:mise-clean"]
 
-  run:cargo-clean:
-    desc: "Run cargo clean"
+  run:swab:
+    desc: "Run swab"
     cmds:
-      - cargo clean
+      - swab
 
   run:mise-clean:
     desc: "Run mise clean"
