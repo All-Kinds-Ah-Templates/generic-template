@@ -88,6 +88,9 @@ env:
 clean:
   task clean
 
+ask *question:
+  copilot -p '{{question}}' --allow-all-tools
+
 help:
   task help
 
