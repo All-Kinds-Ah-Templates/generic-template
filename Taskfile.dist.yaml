@@ -188,7 +188,7 @@ tasks:
 
   docs:
     desc: "Build documentation pages"
-    deps: ["run:scdoc", "run:rustdoc", "run:mdbook", "run:doctave", "run:ddoc", "run:docapella", "run:rspress", "run:zola", "run:pagoda"]
+    deps: ["run:scdoc", "run:rustdoc", "run:mdbook", "run:doctave", "run:ddoc", "run:docapella", "run:zola", "run:pagoda"]
 
   run:scdoc:
     desc: "Build scdoc man pages"
@@ -204,7 +204,7 @@ tasks:
         cmd: scdoc < {{ .ITEM }} > {{ .build_dir }}/{{ .ITEM | filepath.Base | strings.TrimSuffix ".scdoc" }}.1
 
   run:rustdoc:
-    desc: "Build rustdoc technical notes"
+    desc: "Build rustdoc technical manual"
     generates:
       - "./docs/technical/rustdoc"
     preconditions:
