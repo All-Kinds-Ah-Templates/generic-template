@@ -19,7 +19,7 @@ vars:
   author: Acme Inc.
   version: 0.0.1
   build:
-    sh: git rev-parse --short HEAD
+    sh: "[ -d .git ] && git rev-parse --short HEAD || echo dev"
   date:
     sh: date -Ins
   license: MIT
@@ -489,3 +489,24 @@ tasks:
     desc: "Run github-ci upgrade"
     cmds:
       - github-ci upgrade
+
+  bump:
+    desc: "Bump version (patch, minor, or major)"
+    cmds:
+      - task: run:yatr-bump
+
+  run:yatr-bump:
+    desc: "Run yatr bump version"
+    vars:
+      PART: '{{.PART | default "patch"}}'
+    preconditions:
+      - sh: command -v yatr
+        msg: "yatr command not found. Please install yatr first (cargo install --git https://github.com/yonasBSD/yatr)."
+    cmds:
+      - |
+        if [ "{{.PART}}" != "patch" ] && [ "{{.PART}}" != "minor" ] && [ "{{.PART}}" != "major" ]; then
+          echo "Error: PART must be one of: patch, minor, major"
+          exit 1
+        fi
+      - echo "Bump {{.PART}} version..."
+      - yatr bump-{{.PART}}

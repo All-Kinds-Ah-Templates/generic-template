@@ -100,8 +100,13 @@ upgrade:
   echo "Updating installed software..."
   task upgrade
 
-bump:
-  echo "Bump release..."
+bump +PART="patch":
+  @if [ "{{PART}}" != "patch" ] && [ "{{PART}}" != "minor" ] && [ "{{PART}}" != "major" ]; then \
+    echo "Error: PART must be one of: patch, minor, major"; \
+    exit 1; \
+  fi
+  echo "Bump {{PART}} version..."
+  yatr "bump-{{PART}}"
 
 release:
   echo "Publish release..."

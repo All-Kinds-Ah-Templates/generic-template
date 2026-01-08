@@ -1,0 +1,144 @@
+# YATR's own YATR.toml - we eat our own dog food 🐕
+
+[env]
+RUST_BACKTRACE = "1"
+
+[settings]
+cache = true
+watch_debounce_ms = 200
+
+# ─────────────────────────────────────────────────────────────
+# Development tasks
+# ─────────────────────────────────────────────────────────────
+
+[tasks.fmt]
+desc = "Format code"
+run = ["cargo fmt"]
+
+[tasks.lint]
+desc = "Run clippy"
+run = ["cargo clippy -- -D warnings -D clippy::unwrap_used"]
+depends = ["fmt"]
+
+[tasks.test]
+desc = "Run tests"
+run = ["cargo test"]
+sources = ["src/**/*.rs", "Cargo.toml"]
+watch = ["src/**/*.rs", "tests/**/*.rs"]
+
+[tasks.check]
+desc = "Full CI check (fmt, lint, test)"
+depends = ["fmt", "lint", "test"]
+run = []
+
+# ─────────────────────────────────────────────────────────────
+# Build tasks
+# ─────────────────────────────────────────────────────────────
+
+[tasks.build]
+desc = "Build debug binary"
+run = ["cargo build"]
+sources = ["src/**/*.rs", "Cargo.toml", "Cargo.lock"]
+
+[tasks.release]
+desc = "Build optimized release binary"
+depends = ["check"]
+run = ["cargo build --release"]
+sources = ["src/**/*.rs", "Cargo.toml", "Cargo.lock"]
+outputs = ["target/release/yatr"]
+
+# ─────────────────────────────────────────────────────────────
+# Documentation
+# ─────────────────────────────────────────────────────────────
+
+[tasks.doc]
+desc = "Generate documentation"
+run = ["cargo doc --no-deps --open"]
+
+[tasks.readme]
+desc = "Check README code examples"
+run = ["cargo readme > /dev/null"]
+allow_failure = true
+
+# ─────────────────────────────────────────────────────────────
+# Utility tasks
+# ─────────────────────────────────────────────────────────────
+
+[tasks.clean]
+desc = "Clean build artifacts"
+no_cache = true
+run = ["cargo clean"]
+
+[tasks.update]
+desc = "Update dependencies"
+no_cache = true
+run = ["cargo update"]
+
+[tasks.outdated]
+desc = "Check for outdated dependencies"
+no_cache = true
+run = ["cargo outdated"]
+allow_failure = true
+
+[tasks.audit]
+desc = "Security audit dependencies"
+no_cache = true
+run = ["cargo audit"]
+allow_failure = true
+
+# ─────────────────────────────────────────────────────────────
+# Release tasks
+# ─────────────────────────────────────────────────────────────
+
+[tasks.bump-patch]
+desc = "Bump patch version"
+no_cache = true
+script = '''
+    let cargo = parse_toml( read_file("Cargo.toml") );
+    let version = cargo["package"].version;
+    let new_version = semver_bump(version, "patch");
+
+    print(`Bumping version: ${version} -> ${new_version}`);
+
+    cargo["package"].version = new_version;
+    write_file("Cargo.toml", to_toml(cargo));
+'''
+
+[tasks.bump-minor]
+desc = "Bump minor version"
+no_cache = true
+script = '''
+    let cargo = parse_toml( read_file("Cargo.toml") );
+    let version = cargo["package"].version;
+    let new_version = semver_bump(version, "minor");
+
+    print(`Bumping version: ${version} -> ${new_version}`);
+
+    cargo["package"].version = new_version;
+    write_file("Cargo.toml", to_toml(cargo));
+'''
+
+[tasks.publish-dry]
+desc = "Dry-run publish to crates.io"
+depends = ["check"]
+run = ["cargo publish --dry-run"]
+
+[tasks.publish]
+desc = "Publish to crates.io"
+depends = ["check"]
+no_cache = true
+run = ["cargo publish"]
+
+# ─────────────────────────────────────────────────────────────
+# Development workflow
+# ─────────────────────────────────────────────────────────────
+
+[tasks.dev]
+desc = "Run in watch mode during development"
+no_cache = true
+run = ["cargo watch -x 'test' -x 'clippy'"]
+
+[tasks.install-local]
+desc = "Install yatr locally from source"
+depends = ["release"]
+run = ["cargo install --path ."]
