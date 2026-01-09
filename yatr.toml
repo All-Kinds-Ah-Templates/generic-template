@@ -142,3 +142,71 @@ run = ["cargo watch -x 'test' -x 'clippy'"]
 desc = "Install yatr locally from source"
 depends = ["release"]
 run = ["cargo install --path ."]
+
+# ─────────────────────────────────────────────────────────────
+# Doctor
+# ─────────────────────────────────────────────────────────────
+
+[tasks.doctor]
+desc = "Self-diagnostics"
+no_cache = true
+depends = ["doctor-yatr", "doctor-rhai"]
+
+[tasks.doctor-yatr]
+desc = "Test Rhai scripting language"
+run = [
+  "yatr --version"
+]
+
+[tasks.doctor-rhai]
+desc = "Test Rhai scripting language"
+script = '''
+fn a(x) { x + " a" }
+fn b(x) { x + " b" }
+fn c(x) { x + " c" }
+
+print(c(b(a("hello"))));
+
+print (
+    "hello"
+    |> a
+    |> b
+    |> c
+);
+
+print( read_file("yatr.toml") );
+print( is_dir("/tmp") );
+
+print( exec("ls") );
+
+let data = `
+{
+  "data": {
+    "root": "/tmp"
+    "name": "abc"
+  }
+}
+`;
+write_file("/tmp/j.json", data);
+
+let json = parse_json( read_file("/tmp/j.json") );
+
+print( json.data );
+print( json.data.root );
+
+print( get_env("EDITOR") );
+print( set_env("FUN", "hello") );
+print( get_env("FUN") );
+'''
+
+[tasks.help]
+desc = "Help"
+run = ["yatr --help"]
+
+[tasks.hello]
+desc = "Help"
+depends = ["ping"]
+
+[tasks.ping]
+desc = "Help"
+run = ["echo pong"]

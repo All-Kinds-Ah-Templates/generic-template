@@ -468,6 +468,65 @@ tasks:
     cmds:
       - copilot -p "fix all build errors and warnings" --allow-all-tools
 
+  doctor:
+    desc: "Doctor diagnostics"
+    #deps: ["run:doctor-just", "run:doctor-task", "run:doctor-mise"]
+    cmds:
+      - cmd:
+        |
+          printf "\n\n=== Just Doctor ===\n\n"
+          if ! command -v just >/dev/null 2>&1; then
+            echo "Error: just is not installed."
+            return 1
+          fi
+          echo Found $(just -l | wc -l) recipes
+
+          printf "\n\n=== Taskfile Doctor ===\n\n"
+          if ! command -v task >/dev/null 2>&1; then
+            printf "Error: task is not installed."
+            return 1
+          fi
+          echo Found $(task -l | wc -l) tasks
+
+          if [ -f mise.yml ] && command -v mise >/dev/null 2>&1; then
+            printf "\n\n=== Mise Doctor ===\n\n"
+            mise tasks
+            mise list
+            mise doctor
+          fi
+
+          if [ -f pipelight.yml ] && command -v pipelight >/dev/null 2>&1; then
+            printf "\n\n=== Pipelight Doctor ===\n\n"
+            pipelight ls
+          fi
+
+          if [ -f .lefthook.yml ] && command -v lefthook >/dev/null 2>&1; then
+            printf "\n\n=== Lefthook Doctor ===\n\n"
+            lefthook validate
+          fi
+
+          if [ -f .pre-commit-config.yaml ] && command -v prek >/dev/null 2>&1; then
+            printf "\n\n=== Prek Doctor ===\n\n"
+            prek list
+          fi
+
+          if [ -f setup.yaml ] && command -v comtrya >/dev/null 2>&1; then
+            printf "\n\n=== Comtrya Doctor ===\n\n"
+            comtrya -d manifests status
+          fi
+
+          if [ -f .goji.json ] && command -v goji >/dev/null 2>&1; then
+            printf "\n\n=== Goji Doctor ===\n\n"
+            COUNT=$(jq '.types | length' < .goji.json)
+            printf "Found $COUNT goji types."
+          fi
+
+          if [ -f preflight.yml ] && command -v preflight >/dev/null 2>&1; then
+            printf "\n\n=== Preflight Doctor ===\n\n"
+            preflight checks
+          fi
+        silent: true
+
   upgrade:
     desc: "Perform upgrades"
     deps: ["upgrade:tools", "upgrade:workflows"]
