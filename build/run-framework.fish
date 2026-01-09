@@ -192,8 +192,14 @@ function run-framework-run-stage
     switch $stage
       # preflight
       case preflight
-        colorme green "Empty preflight script."
-        #cargo make preflight
+        if test -f "preflight.yml" && type -q preflight
+          preflight scan
+
+        else
+          colorme green "Empty preflight script."
+          #cargo make preflight
+
+        end
 
       # init
       case init
