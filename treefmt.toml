@@ -33,3 +33,15 @@ command = "github-ci"
 options = ["lint", "--fix"]
 excludes = []
 includes = [".github/workflows/*.yaml"]
+
+[formatter.justfile-check]
+command = "just"
+options = [" --fmt", "--check", "--unstable", "--justfile"]
+excludes = []
+includes = ["justfile", "*.just"]
+
+[formatter.justfile-format]
+command = "just"
+options = [" --fmt", "--unstable", "--justfile"]
+excludes = []
+includes = ["justfile", "*.just"]
