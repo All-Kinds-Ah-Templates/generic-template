@@ -156,7 +156,7 @@ tasks:
 
   lint:
     desc: "Lint code"
-    deps: ["run:lychee", "run:todos", "run:oxlint"]
+    deps: ["run:lychee", "run:todos", "run:oxlint", "run:zenv"]
 
   run:lychee:
     desc: "Run lychee link checker"
@@ -175,6 +175,11 @@ tasks:
     desc: "Run oxlint"
     cmds:
       - oxlint
+
+  run:zenv:
+    desc: "Run zenv"
+    cmds:
+      - zenv check
 
   format:
     desc: "Format code"
