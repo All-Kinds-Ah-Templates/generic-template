@@ -12,6 +12,7 @@ A generic template to base your language-specific templates.
 - #link("https://github.com/features/actions")[GitHub Actions] and #link("https://woodpecker-ci.org")[Woodpecker CI] integration
 - #link("https://github.com/evilmartians/lefthook")[lefthook] pre-commit scripts
 - #link("https://github.com/j178/prek")[prek] pre-commit scripts
+- #link("https://preflight.sh")[preflight] preflight checks
 - #link("https://just.systems")[just] and #link("https://taskfile.dev")[go-task] task runners
 - #link("https://github.com/comtrya/comtrya")[comtrya] deployment runners
 - #link("https://pipelight.dev")[pipelight] CI pipelines
@@ -73,6 +74,7 @@ just build
 - lefthook
 - minijinja
 - prek
+- preflight
 - pipelight
 - rcl
 - rsign
