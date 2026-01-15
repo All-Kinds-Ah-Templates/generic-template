@@ -19,3 +19,6 @@ build/output/
 
 # Mise local config (may contain secrets)
 .mise.local.toml
+
+# Core dumps
+*.core
