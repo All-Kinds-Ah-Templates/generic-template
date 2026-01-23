@@ -86,6 +86,13 @@ env:
 clean:
   task clean
 
+  # Manage tasks using tiki or todo-tree
+  # Manage tasks using tiki or todo-tree
+todo arg='list':
+    @{{ if arg =~ '^(add|edit|open|view)$' { "tiki " + arg } \
+        else if arg == "list" { "todo-tree" } \
+        else { "echo Unknown argument: " + arg + " && exit 1" } }}
+
 # Prompt Copilot A.I.
 ask *question:
   copilot -p '{{question}}' --allow-all-tools
