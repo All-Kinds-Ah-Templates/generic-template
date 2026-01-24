@@ -52,7 +52,18 @@ function run-framework-get-run-cmd
         end
       end
 
-      minijinja-cli (git rev-parse --show-toplevel)/build/taskfile.runner.yaml.j2 -D <(echo $files_json | jq '{files: .}') -o taskfile.yaml.run
+      set git_root (git rev-parse --show-toplevel)
+      set local_tasks (find . -maxdepth 1 -name '*.local.task' -printf '"%f"\n')
+
+      if set -q local_tasks[1]
+        set local_tasks_json "["(string join , $local_tasks_json)"]"
+
+      else
+        set local_tasks_json "[]"
+
+      end
+
+      minijinja-cli $git_root/build/taskfile.runner.yaml.j2 -D git_root=$git_root -D local_tasks=$local_tasks_json -D <(echo $files_json | jq '{files: .}') -o taskfile.yaml.run
       set cmd "taskfile --taskfile taskfile.yaml.run"
 
     case pipelight.yaml

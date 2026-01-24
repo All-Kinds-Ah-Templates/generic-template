@@ -1,4 +1,4 @@
-version: "3"
+version: '3'
 
 env:
   #ENV: dev
@@ -6,7 +6,29 @@ env:
   #ENV: staging
   ENV: production
 
-dotenv: [".env", "{{ .taskEnv }}"]
+dotenv: ['.env', '{{ .taskEnv }}']
+
+includes:
+  dist:
+    taskfile: {{ git_root }}/scripts/Taskfile.dist.yaml
+    flatten: true  # This removes the 'dist:' prefix requirement
+
+  local:
+    taskfile: {{ git_root }}/scripts/Taskfile.local.yaml
+    optional: true
+    flatten: true  # This removes the 'local:' prefix requirement
+
+  {%- for file in local_tasks %}
+  custom_{{ loop.index }}
+    taskfile: ./{{ file }}
+    optional: true
+    flatten: true  # This removes the 'custom_{{ loop.index }}:' prefix requirement
+  {%- endfor %}
+
+  custom:
+    taskfile: ./local.task
+    optional: true
+    flatten: true  # This removes the 'custom:' prefix requirement
 
 vars:
   project: Hello World
