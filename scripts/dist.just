@@ -137,3 +137,30 @@ watch:
 # Performance benchmarking
 bench:
   echo "Launch benchmarks..."
+
+timed task:
+  #!/usr/bin/env fish
+
+  set start (date +%s)
+
+  set cyan (set_color cyan)
+  set green (set_color green)
+  set yellow (set_color yellow)
+  set red (set_color red)
+  set reset (set_color normal)
+
+  echo "▶ $cyan""{{task}}""$reset"
+
+  just {{task}}
+  set s $status
+
+  set end (date +%s)
+  set duration (math $end - $start)
+
+  if test $s -eq 0
+    echo "$green""✔""$reset   $yellow""⏱  took $duration""s""$reset"
+  else
+    echo "$red""✖""$reset   $yellow""⏱  took $duration""s""$reset"
+  end
+
+  exit $s
