@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: Release Build
-        uses: yonasBSD/toolkit@e3156a095eb4a759778ad8ef10dfd58dd00993e6 # v0.1.0
+        uses: yonasBSD/toolkit@e3156a095eb4a759778ad8ef10dfd58dd00993e6 # v1.0.0
         with:
           run: |
             cargo auditable build --release
