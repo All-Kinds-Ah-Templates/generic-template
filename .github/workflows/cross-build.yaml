@@ -153,8 +153,7 @@ jobs:
           usesh: true
           sync: rsync
           prepare: |
-            pkg update -f && pkg install -y curl rust-nightly
-            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+            pkg update -f && pkg install -y curl rust-nightly task
           run: task test
 
       - name: Run tests in OpenBSD VM
@@ -164,8 +163,8 @@ jobs:
           usesh: true
           sync: rsync
           prepare: |
-            pkg_add curl rust
-            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+            pkg_add curl rust go
+            env GOBIN=/usr/local/bin go install github.com/go-task/task/v3/cmd/task@latest
           run: task test
 
       - name: Run tests in Slackware VM
