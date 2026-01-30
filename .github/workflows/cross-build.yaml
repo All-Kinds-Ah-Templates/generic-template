@@ -10,6 +10,14 @@ on:
     branches: [main]
     types: [completed]
 
+# Prevent multiple concurrent runs
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  TASKFILE_VERSION: "3.x"
+
 jobs:
   test:
     name: ${{ matrix.os.name }}
@@ -28,22 +36,41 @@ jobs:
           - { name: Windows, runner: windows-latest, type: native }
 
           # BSD VMs
-          - { name: FreeBSD, runner: ubuntu-latest, type: vm, action: "vmactions/freebsd-vm@v1", prepare: "pkg update -f; pkg install -y curl rust-nightly" }
-          - { name: OpenBSD, runner: ubuntu-latest, type: vm, action: "vmactions/openbsd-vm@v1", prepare: "pkg_add curl rust" }
+          - { name: FreeBSD, runner: ubuntu-latest, type: vm }
+          - { name: OpenBSD, runner: ubuntu-latest, type: vm }
 
           # Linux Containers
-          - { name: Fedora, runner: ubuntu-latest, type: container, image: "fedora:latest", pkg: "dnf install -y rust cargo" }
-          - { name: Rocky, runner: ubuntu-latest, type: container, image: "rockylinux:9", pkg: "dnf install -y rust cargo" }
-          - { name: OpenSUSE, runner: ubuntu-latest, type: container, image: "opensuse/tumbleweed", pkg: "zypper install -y rust cargo" }
+          - {
+              name: Fedora,
+              runner: ubuntu-latest,
+              type: container,
+              image: "fedora:latest",
+              install: "dnf install -y rust cargo"
+            }
+          - {
+              name: Rocky,
+              runner: ubuntu-latest,
+              type: container,
+              image: "rockylinux:9",
+              install: "dnf install -y rust cargo"
+            }
+          - {
+              name: OpenSUSE,
+              runner: ubuntu-latest,
+              type: container,
+              image: "opensuse/tumbleweed",
+              install: "zypper install -y rust cargo"
+            }
 
           # Specialized Linux
           - { name: Alpine, runner: ubuntu-latest, type: alpine }
           - { name: Arch, runner: ubuntu-latest, type: arch }
-          - { name: Slackware, runner: ubuntu-latest, type: vm, action: "vmactions/slackware-vm@v1", prepare: "slackpkg update && slackpkg install -y rust" }
+          - { name: Slackware, runner: ubuntu-latest, type: vm }
 
     runs-on: ${{ matrix.os.runner }}
-    container:
-      image: ${{ matrix.os.image }} # Only active when type is 'container'
+
+    # Only activate container for container-type jobs
+    container: ${{ matrix.os.type == 'container' && matrix.os.image || null }}
 
     steps:
       - name: Harden Runner
@@ -51,83 +78,132 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
-            api.deps.dev:443 api.github.com:443 api.osv.dev:443 api.scorecard.dev:443
-            github.com:443 objects.githubusercontent.com:443 raw.githubusercontent.com:443
-            static.rust-lang.org:443 static.crates.io:443 index.crates.io:443
-            *.ubuntu.com:80 *.ubuntu.com:443 packages.microsoft.com:443
-            *.freebsd.org:443 *.openbsd.org:443 *.netbsd.org:443
-            *.alpinelinux.org:443 *.archlinux.org:443 *.pkgbuild.com:443
-            *.fedoraproject.org:443 *.opensuse.org:443 *.rockylinux.org:443
-            slackware.osuosl.org:80 *.pool.ntp.org:443 time.cloudflare.com:443
+            api.deps.dev:443
+            api.github.com:443
+            api.osv.dev:443
+            api.scorecard.dev:443
+            github.com:443
+            objects.githubusercontent.com:443
+            raw.githubusercontent.com:443
+            static.rust-lang.org:443
+            static.crates.io:443
+            index.crates.io:443
+            *.ubuntu.com:80
+            *.ubuntu.com:443
+            packages.microsoft.com:443
+            *.freebsd.org:443
+            *.openbsd.org:443
+            *.netbsd.org:443
+            *.alpinelinux.org:443
+            *.archlinux.org:443
+            *.pkgbuild.com:443
+            *.fedoraproject.org:443
+            *.opensuse.org:443
+            *.rockylinux.org:443
+            slackware.osuosl.org:80
+            *.pool.ntp.org:443
+            time.cloudflare.com:443
             taskfile.dev:443
 
       - name: Checkout sources
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 
-      # --- Logic for Native OS (Ubuntu, Mac, Windows) ---
-      - name: Install Rust (Native)
+      # ===========================================
+      # Native OS (Ubuntu, macOS, Windows)
+      # ===========================================
+      - name: Install Rust
         if: matrix.os.type == 'native'
         uses: dtolnay/rust-toolchain@e97e2d8cc328f1b50210efc529dca0028893a2d9 # v1
 
-      - name: Rust Cache (Native)
+      - name: Setup Rust cache
         if: matrix.os.type == 'native'
         uses: Swatinem/rust-cache@779680da715d629ac1d338a641029a2f4372abb5 # v2.8.2
 
-      - name: Install Taskfile (Native)
+      - name: Install Taskfile
         if: matrix.os.type == 'native'
         uses: arduino/setup-task@b91d5d2c96a56797b48ac1e0e89220bf64044611 # v2.0.0
         with:
-          version: 3.x
+          version: ${{ env.TASKFILE_VERSION }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Test (Native)
+      - name: Run tests
         if: matrix.os.type == 'native'
         run: task test
 
-      # --- Logic for Containers (Fedora, Rocky, OpenSUSE) ---
-      - name: Install Dependencies (Container)
+      # ===========================================
+      # Container-based Linux (Fedora, Rocky, etc.)
+      # ===========================================
+      - name: Install dependencies
         if: matrix.os.type == 'container'
         run: |
-          ${{ matrix.os.pkg }}
+          ${{ matrix.os.install }}
           sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
 
-      - name: Run tests (Container)
+      - name: Run tests
         if: matrix.os.type == 'container'
         run: task test
 
-      # --- Logic for VMs (BSDs, Slackware) ---
-      - name: Run Tests (VM)
-        if: matrix.os.type == 'vm'
-        uses: ${{ matrix.os.action }}
+      # ===========================================
+      # VM-based (BSD, Slackware)
+      # ===========================================
+      - name: Run tests in FreeBSD VM
+        if: matrix.os.name == 'FreeBSD'
+        uses: vmactions/freebsd-vm@v1
         with:
           usesh: true
           sync: rsync
           prepare: |
-            ${{ matrix.os.prepare }}
+            pkg update -f && pkg install -y curl rust-nightly
             sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
           run: task test
 
-      # --- Logic for Alpine ---
-      - name: Setup Alpine
+      - name: Run tests in OpenBSD VM
+        if: matrix.os.name == 'OpenBSD'
+        uses: vmactions/openbsd-vm@v1
+        with:
+          usesh: true
+          sync: rsync
+          prepare: |
+            pkg_add curl rust
+            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+          run: task test
+
+      - name: Run tests in Slackware VM
+        if: matrix.os.name == 'Slackware'
+        uses: vmactions/slackware-vm@v1
+        with:
+          usesh: true
+          sync: rsync
+          prepare: |
+            slackpkg update && slackpkg install -y rust
+            sh -c "$(curl --location https://taskfile.dev/install.sh)" -- -d -b /usr/local/bin
+          run: task test
+
+      # ===========================================
+      # Alpine Linux
+      # ===========================================
+      - name: Setup Alpine Linux
         if: matrix.os.type == 'alpine'
         uses: jirutka/setup-alpine@ae3b3ddba35054804fc4a3507b519fa7e8152050 # v1
         with:
           branch: edge
 
-      - name: Run Alpine Tests
+      - name: Run tests
         if: matrix.os.type == 'alpine'
         run: |
           apk add go-task
           task test
         shell: alpine.sh --root {0}
 
-      # --- Logic for Arch ---
-      - name: Setup Arch
+      # ===========================================
+      # Arch Linux
+      # ===========================================
+      - name: Setup Arch Linux
         if: matrix.os.type == 'arch'
         uses: RangHo/setup-arch@19885eda0c0b0d1791e61e1d32f2552d42944b14 # main
         with:
           packages: "rust go-task"
 
-      - name: Run Arch Tests
+      - name: Run tests
         if: matrix.os.type == 'arch'
         run: task test
