@@ -102,16 +102,101 @@ tasks:
 
   coverage:
     desc: "Generate code coverage report"
-    deps: ["coverage:rust"]
+    deps: ["coverage:codecov-json", "coverage:html"]
 
-  coverage:rust:
-    desc: "Generate code coverage report"
+  coverage:codecov-json:
+    desc: "Generate code coverage report (codecov format)"
     generates:
       - "./codecov.json"
     sources:
       - "**/*.rs"
     cmds:
-      - cargo llvm-cov nextest --all-features --workspace --codecov --output-path ./codecov.json
+      # This runs the specialized FreeBSD or Default logic via dispatch
+      - task: _dispatch
+        vars: { COVERAGE_ARGS: "--codecov --output-path ./codecov.json" }
+
+  coverage:html:
+    desc: "Generate code coverage report (HTML)"
+    generates:
+      - "./coverage-report/index.html"
+    sources:
+      - "**/*.rs"
+    cmds:
+      - task: run:llvm-cov-persistent
+
+  run:llvm-cov:
+    desc: Run llvm-cov coverage report generator. Fails if thresholds aren't met.
+    cmds:
+      - task: _dispatch
+
+  run:llvm-cov-persistent:
+    internal: true
+    desc: Run coverage and generate HTML even if thresholds fail
+    cmds:
+      # The 'ignore_error: true' allows HTML generation even on threshold failure
+      - task: _dispatch
+        ignore_error: true
+      - task: _generate-html
+
+  # --- Internal Dispatchers ---
+
+  _dispatch:
+    internal: true
+    cmds:
+      # Task will evaluate the 'platforms' key inside these tasks automatically
+      - task: _run-llvm-cov-freebsd
+      - task: _run-llvm-cov-default
+
+  _run-llvm-cov-freebsd:
+    internal: true
+    platforms: [freebsd]
+    vars:
+      # Dynamically find the binary on FreeBSD to avoid hardcoding version 19
+      DETECTED_LLVM_COV:
+        sh: ls /usr/local/bin/llvm-cov* | sort -V -r | head -n 1
+      DETECTED_LLVM_PROFDATA:
+        sh: ls /usr/local/bin/llvm-profdata* | sort -V -r | head -n 1
+    env:
+      LLVM_COV: '{{.LLVM_COV | default .DETECTED_LLVM_COV}}'
+      LLVM_PROFDATA: '{{.LLVM_PROFDATA | default .DETECTED_LLVM_PROFDATA}}'
+    cmds:
+      - task: _execute-coverage-logic
+        vars: { ARGS: "{{.COVERAGE_ARGS}}" }
+
+  _run-llvm-cov-default:
+    internal: true
+    # Run this on everything else
+    platforms: [linux, darwin, windows]
+    cmds:
+      - task: _execute-coverage-logic
+        vars: { ARGS: "{{.COVERAGE_ARGS}}" }
+
+  # --- Core Logic ---
+
+  _execute-coverage-logic:
+    internal: true
+    vars:
+      CRATE_MANIFESTS:
+        sh: find . -mindepth 2 -name "Cargo.toml" -not -path "*/target/*"
+    cmds:
+      # 1. Run the primary test suite across the whole workspace
+      - cargo llvm-cov nextest --all-features --workspace {{.ARGS}}
+
+      # 2. Iterate over every discovered crate to enforce thresholds
+      - for: { var: CRATE_MANIFESTS }
+        cmd: |
+          echo "Checking coverage thresholds for: {{.ITEM}}"
+          cargo llvm-cov --manifest-path {{.ITEM}} --fail-under-lines 90 --fail-under-functions 90
+
+      # 3. Finalize report
+      - task: _generate-html
+
+  _generate-html:
+    internal: true
+    cmds:
+      - echo "Generating coverage report..."
+      - cargo llvm-cov --workspace --html --output-dir ./coverage-report
+      - echo "Report available at ./coverage-report/index.html"
 
   run:pipelight:tests:
     desc: "Run pipelight tests"
@@ -137,7 +222,7 @@ tasks:
 
   clean:
     desc: "Clean up"
-    deps: ["run:swab", "run:mise-clean"]
+    deps: ["run:swab", "run:mise-clean", "run:cov-clean"]
 
   run:swab:
     desc: "Run swab"
@@ -151,6 +236,17 @@ tasks:
     cmds:
       - mise prune
       - mise cache clear
+
+  run:cov-clean:
+    desc: Remove coverage reports and raw data without wiping the build cache
+    cmds:
+      - echo "Cleaning coverage artifacts..."
+      # -f prevents errors if the files don't exist
+      - rm -rf ./coverage-report/
+      - rm -rf ./coverage/
+      # Remove LLVM raw profile data
+      - command find . -name "*.profraw" -type f -delete
+      - command find . -name "*.profdata" -type f -delete
 
   lint:
     desc: "Lint code"
