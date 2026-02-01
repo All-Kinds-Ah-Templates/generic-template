@@ -26,6 +26,14 @@ vars:
   hostname:
     sh: hostname
   taskEnv: .task.env
+  # ANSI Color Codes
+  C_GRN: '\033[0;32m'
+  C_RED: '\033[0;31m'
+  C_YLW: '\033[0;33m'
+  C_BLU: '\033[0;34m'
+  C_DIM: '\033[2m'
+  C_RST: '\033[0m'
+
 
 tasks:
   default:
@@ -568,63 +576,184 @@ tasks:
       - copilot -p "fix all build errors and warnings" --allow-all-tools
 
   doctor:
-    desc: "Doctor diagnostics"
-    #deps: ["run:doctor-just", "run:doctor-task", "run:doctor-mise"]
+    desc: "Run all diagnostic checks"
     cmds:
-      - cmd:
-        |
-          printf "\n\n=== Just Doctor ===\n\n"
-          if ! command -v just >/dev/null 2>&1; then
-            echo "Error: just is not installed."
-            return 1
-          fi
-          echo Found $(just -l | wc -l) recipes
-
-          printf "\n\n=== Taskfile Doctor ===\n\n"
-          if ! command -v task >/dev/null 2>&1; then
-            printf "Error: task is not installed."
-            return 1
-          fi
-          echo Found $(task -l | wc -l) tasks
-
-          if [ -f mise.yml ] && command -v mise >/dev/null 2>&1; then
-            printf "\n\n=== Mise Doctor ===\n\n"
-            mise tasks
-            mise list
-            mise doctor
-          fi
-
-          if [ -f pipelight.yml ] && command -v pipelight >/dev/null 2>&1; then
-            printf "\n\n=== Pipelight Doctor ===\n\n"
-            pipelight ls
-          fi
-
-          if [ -f .lefthook.yml ] && command -v lefthook >/dev/null 2>&1; then
-            printf "\n\n=== Lefthook Doctor ===\n\n"
-            lefthook validate
-          fi
-
-          if [ -f .pre-commit-config.yaml ] && command -v prek >/dev/null 2>&1; then
-            printf "\n\n=== Prek Doctor ===\n\n"
-            prek list
-          fi
-
-          if [ -f setup.yaml ] && command -v comtrya >/dev/null 2>&1; then
-            printf "\n\n=== Comtrya Doctor ===\n\n"
-            comtrya -d manifests status
-          fi
-
-          if [ -f .goji.json ] && command -v goji >/dev/null 2>&1; then
-            printf "\n\n=== Goji Doctor ===\n\n"
-            COUNT=$(jq '.types | length' < .goji.json)
-            printf "Found $COUNT goji types."
-          fi
-
-          if [ -f preflight.yml ] && command -v preflight >/dev/null 2>&1; then
-            printf "\n\n=== Preflight Doctor ===\n\n"
-            preflight checks
-          fi
+      # Initialize or reset the tally file
+      - cmd: rm -f .doctor_tally && touch .doctor_tally
         silent: true
+      - { task: _doc-just, ignore_error: true }
+      - { task: _doc-task, ignore_error: true }
+      - { task: _doc-mise, ignore_error: true }
+      - { task: _doc-pipelight, ignore_error: true }
+      - { task: _doc-lefthook, ignore_error: true }
+      - { task: _doc-prek, ignore_error: true }
+      - { task: _doc-comtrya, ignore_error: true }
+      - { task: _doc-goji, ignore_error: true }
+      - { task: _doc-preflight, ignore_error: true }
+      # Final summary dashboard
+      - task: _doctor-summary
+
+  _doc-just:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if command -v just >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Just Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Found $(just -l | wc -l | xargs) recipes\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_RED}}=== Just Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_RED}}✗{{.C_RST}}] Error: 'just' is not installed.\n"
+          echo "fail" >> .doctor_tally
+          exit 1
+        fi
+
+  _doc-task:
+    internal: true
+    silent: true
+    cmds:
+      - printf "\n{{.C_BLU}}=== Taskfile Doctor ==={{.C_RST}}\n"
+      - printf "  [{{.C_GRN}}✓{{.C_RST}}] Found $(task -l | wc -l | xargs) tasks\n"
+      - echo "pass" >> .doctor_tally
+
+  _doc-mise:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f mise.toml ] || [ -f .mise.toml ] || [ -f mise.yaml ]; then
+          printf "\n{{.C_BLU}}=== Mise Doctor ==={{.C_RST}}\n"
+          if command -v mise >/dev/null 2>&1; then
+             printf "  [{{.C_GRN}}✓{{.C_RST}}] Configuration found\n"
+             echo "pass" >> .doctor_tally
+          else
+             printf "  [{{.C_RED}}✗{{.C_RST}}] Config found but 'mise' binary is missing.\n"
+             echo "fail" >> .doctor_tally
+             exit 1
+          fi
+        else
+          printf "\n{{.C_DIM}}=== Mise Doctor ===\n"
+          printf "  [-] Mise not configured.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-pipelight:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f pipelight.yml ] && command -v pipelight >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Pipelight Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Pipelight is active\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Pipelight Doctor ===\n"
+          printf "  [-] Pipelight not found or not configured.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-lefthook:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f .lefthook.yml ] && command -v lefthook >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Lefthook Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Validating Lefthook...\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Lefthook Doctor ===\n"
+          printf "  [-] Lefthook not found or not configured.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-prek:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f .pre-commit-config.yaml ] && command -v prek >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Prek Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Prek is active\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Prek Doctor ===\n"
+          printf "  [-] Prek not found or not configured.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-comtrya:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f setup.yaml ] && command -v comtrya >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Comtrya Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Checking Comtrya status...\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Comtrya Doctor ===\n"
+          printf "  [-] Comtrya not found or setup.yaml missing.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-goji:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f .goji.json ] && command -v jq >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Goji Doctor ==={{.C_RST}}\n"
+          COUNT=$(jq '.types | length' < .goji.json)
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Found $COUNT goji types.\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Goji Doctor ===\n"
+          printf "  [-] Goji configuration or jq missing.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  _doc-preflight:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        if [ -f preflight.yml ] && command -v preflight >/dev/null 2>&1; then
+          printf "\n{{.C_BLU}}=== Preflight Doctor ==={{.C_RST}}\n"
+          printf "  [{{.C_GRN}}✓{{.C_RST}}] Running preflight checks...\n"
+          echo "pass" >> .doctor_tally
+        else
+          printf "\n{{.C_DIM}}=== Preflight Doctor ===\n"
+          printf "  [-] Preflight not found or not configured.{{.C_RST}}\n"
+          echo "skip" >> .doctor_tally
+        fi
+
+  # --- Summary Logic ---
+
+  _doctor-summary:
+    internal: true
+    silent: true
+    cmds:
+      - |
+        PASS=$(awk '/pass/ {count++} END {print count+0}' .doctor_tally)
+        FAIL=$(awk '/fail/ {count++} END {print count+0}' .doctor_tally)
+        SKIP=$(awk '/skip/ {count++} END {print count+0}' .doctor_tally)
+
+        printf "\n\n{{.C_YLW}}================================={{.C_RST}}\n"
+        printf "         DOCTOR SUMMARY          \n"
+        printf "{{.C_YLW}}================================={{.C_RST}}\n"
+        printf "  [{{.C_GRN}}✓{{.C_RST}}] Passed:  $PASS\n"
+        printf "  [{{.C_RED}}✗{{.C_RST}}] Failed:  $FAIL\n"
+        printf "  {{.C_DIM}}[-] Skipped: $SKIP{{.C_RST}}\n"
+        printf "{{.C_YLW}}================================={{.C_RST}}\n"
+
+        rm -f .doctor_tally
+
+        if [ "$FAIL" -ne "0" ]; then
+          printf "\n  {{.C_RED}}!! Some checks failed. Please review the log above. !!{{.C_RST}}\n\n"
+          exit 1
+        fi
 
   upgrade:
     desc: "Perform upgrades"
