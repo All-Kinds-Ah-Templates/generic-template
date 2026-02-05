@@ -1,5 +1,13 @@
 # TODO
 
+## Run Framework
+
+- make run event more accessible
+  - on_started   => run() was launched
+  - on_abortion  => run() was halted
+  - on_failure   => run() had failed
+  - on_success   => run() was successful
+
 spontaneous
  - if I have to look into my own thought process more often than interact with the outside
 

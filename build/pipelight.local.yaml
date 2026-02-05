@@ -103,3 +103,31 @@ pipelines:
           commands:
             - echo one
             - echo two
+
+  - name: on_started
+
+    steps:
+      - name: Started
+        commands:
+          - echo Run Started...
+
+  - name: on_failure
+
+    steps:
+      - name: Failure
+        commands:
+          - echo Run Failed...
+
+  - name: on_success
+
+    steps:
+      - name: Successful
+        commands:
+          - echo Run Successful...
+
+  - name: on_abortion
+
+    steps:
+      - name: Aborted
+        commands:
+          - echo Run Aborted...
