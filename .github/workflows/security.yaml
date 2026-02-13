@@ -69,6 +69,6 @@ jobs:
           persist-credentials: false
 
       - name: 🕵️ Run TruffleHog OSS
-        uses: trufflesecurity/trufflehog@7f4e37db2d928c18ddd7ddf0604f8f7d1f5793ec # v3.93.0
+        uses: trufflesecurity/trufflehog@6961f2bace57ab32b23b3ba40f8f420f6bc7e004 # v3.93.3
         with:
           extra_args: --results=verified,unknown
