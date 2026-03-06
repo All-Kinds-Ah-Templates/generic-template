@@ -45,7 +45,7 @@ jobs:
           persist-credentials: false
 
       - name: Conventional commit check
-        uses: cocogitto/cocogitto-action@9a9fe03b31c47444290c0d7f9b1ee1b44ee13f20 # main
+        uses: cocogitto/cocogitto-action@52d0023b4396897f1815648e553db2ab8d782f3a # main
         with:
           command: check
 
