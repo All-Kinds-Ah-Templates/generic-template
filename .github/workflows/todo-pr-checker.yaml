@@ -18,6 +18,6 @@ jobs:
           persist-credentials: false
 
       - name: Check for Todos
-        uses: phntmxyz/pr_todo_checker@2c2e2f22f56b74b01d69a81eb56d1f61bcc4d82a # v1.1.7
+        uses: phntmxyz/pr_todo_checker@ca2891552a6cd4069c6afb83c955133e77dac685 # v1.2.0
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
