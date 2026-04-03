@@ -20,7 +20,7 @@ jobs:
           toolchain: nightly
 
       - name: Install cargo-binstall
-        uses: cargo-bins/cargo-binstall@113a77a4ce971c41332f2129c3d995df993cf746 # main
+        uses: cargo-bins/cargo-binstall@0b24824336e2b3800b0f89d9e08b2c08bfa3dcdd # main
 
       - name: Install Cocogitto
         run: cargo binstall -y todo-tree
